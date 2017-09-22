@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Testing Motors 00
+ * Testing Motors
  */
 
 @TeleOp (name = "Motor Test")

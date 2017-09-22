@@ -34,7 +34,7 @@ public class ArcadeTest extends LinearOpMode {
 
             double power = -gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
-            double turn = -gamepad1.right_stick_y;
+            double turn = -gamepad1.right_stick_x;
 
             frontLeft.setPower(power + turn + strafe);
             backLeft.setPower(power + turn - strafe);
