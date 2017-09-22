@@ -1,4 +1,4 @@
-The correct config: https://photos.google.com/album/AF1QipPrQLZ38Nd7-cNRv2BPKoh7y7PvjkJdcjaa3eRN
+The correct config: https://photos.app.goo.gl/MHzVDGqkQt1iE2Br2
 
 
 ## TeamCode Module
