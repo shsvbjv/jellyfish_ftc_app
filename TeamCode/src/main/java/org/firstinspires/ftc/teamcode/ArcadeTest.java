@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Manual with Arcade Drive
+ * Manual with Arcade Drive iooio
  */
 
 @TeleOp (name = "Arcade Test")
@@ -40,6 +40,8 @@ public class ArcadeTest extends LinearOpMode {
             backLeft.setPower(power + turn - strafe);
             frontRight.setPower(power - turn - strafe);
             backRight.setPower(power - turn + strafe);
+
+
         }
     }
 }
