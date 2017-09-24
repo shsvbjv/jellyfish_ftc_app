@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Manual with Arcade Drive
+ * Testing Motors
  */
 
-@TeleOp (name = "Arcade Test")
-public class ArcadeTest extends LinearOpMode {
+@TeleOp (name = "Motor Test")
+public class MotorTest extends LinearOpMode {
 
     private DcMotor frontLeft;
     private DcMotor backLeft;
@@ -31,15 +31,10 @@ public class ArcadeTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-
-            double power = -gamepad1.left_stick_y;
-            double strafe = -gamepad1.left_stick_x;
-            double turn = -gamepad1.right_stick_x;
-
-            frontLeft.setPower(power + turn + strafe);
-            backLeft.setPower(power + turn - strafe);
-            frontRight.setPower(power - turn - strafe);
-            backRight.setPower(power - turn + strafe);
+            frontLeft.setPower(-gamepad1.left_stick_y);
+            frontRight.setPower(-gamepad1.right_stick_y);
+            backLeft.setPower(-gamepad2.left_stick_y);
+            backRight.setPower(-gamepad2.right_stick_y);
         }
     }
 }
