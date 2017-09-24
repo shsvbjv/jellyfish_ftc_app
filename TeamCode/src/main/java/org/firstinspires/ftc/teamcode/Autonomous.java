@@ -28,6 +28,13 @@ public class Autonomous extends LinearOpMode {
         //start Autonomous
         waitForStart();
         while (opModeIsActive()) {
+            DriveForwardTime(1,5);
+            TurnLeftTime(1,1);
+            DriveForwardTime(1,5);
+            TurnLeftTime(1,1);
+
+
+
 
 
         }
