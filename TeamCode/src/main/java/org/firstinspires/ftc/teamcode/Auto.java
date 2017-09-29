@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import java.lang.String;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -27,12 +28,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name = "Auto")
-@Disabled
 public class Auto extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
+    private String col;
 
     VuforiaLocalizer vuforia;
 
@@ -116,6 +117,18 @@ public class Auto extends LinearOpMode {
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
+
+                //telemetry.addData("VuMark", "%s visible", vuMark);
+
+                //allows auto mode to know which column to put it in
+                if ((col == null)){
+                    col = "" + vuMark;
+
+                }
+                telemetry.addData("Var that auto uses", "%s" , col);
+
+                //setting vumark to a variable for use later
+
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
