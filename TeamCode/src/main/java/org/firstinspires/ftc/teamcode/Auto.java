@@ -46,7 +46,7 @@ public class Auto extends LinearOpMode {
     private String col;
 
     //servo for the arm that detects which color jewel
-    private Servo colorArm;
+    //private Servo colorArm;
 
     ColorSensor colorSensor;
 
@@ -58,7 +58,7 @@ public class Auto extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
-        colorArm = hardwareMap.get(Servo.class, "colorArm");
+        //colorArm = hardwareMap.get(Servo.class, "colorArm");
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
 
@@ -111,6 +111,7 @@ public class Auto extends LinearOpMode {
         relicTrackables.activate();
 
         //color stuffs
+        /*
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F,0F,0F};
 
@@ -140,6 +141,7 @@ public class Auto extends LinearOpMode {
 
         // while the op mode is active, loop and read the RGB data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+        */
 
         //start Autonomous
         waitForStart();
@@ -150,6 +152,7 @@ public class Auto extends LinearOpMode {
             TurnLeftTime(0.4,1);
             DriveForwardTime(100,5);
 
+            /*
             //color sensor
             // check the status of the x button on either gamepad.
             bCurrState = gamepad1.x;
@@ -176,12 +179,14 @@ public class Auto extends LinearOpMode {
 
                 }
                 telemetry.addData("Var that auto uses", "%s" , col);
+                */
 
                 //setting vumark to a variable for use later
 
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
+            /*
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
@@ -204,7 +209,7 @@ public class Auto extends LinearOpMode {
             telemetry.update();
 
             // update previous state variable.
-            bPrevState = bCurrState;
+            //bPrevState = bCurrState;
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
@@ -225,7 +230,7 @@ public class Auto extends LinearOpMode {
                     relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
                 }
             });
-
+            */
             telemetry.update();
         }
     }
