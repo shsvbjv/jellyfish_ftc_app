@@ -148,6 +148,7 @@ public class Auto extends LinearOpMode {
             TurnLeftTime(0.4,1);
             DriveForwardTime(0.2,5);
             TurnLeftTime(0.4,1);
+            DriveForwardTime(100,5);
 
             //color sensor
             // check the status of the x button on either gamepad.

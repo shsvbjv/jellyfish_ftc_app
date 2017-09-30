@@ -79,6 +79,7 @@ public class SensorColor extends LinearOpMode {
     int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
     relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
+
     try {
       runSample(); // actually execute the sample
     } finally {
