@@ -48,10 +48,10 @@ public class ArcadeTest extends LinearOpMode {
                 turn = Range.clip(-gamepad1.right_stick_x, -1, 1);
             }
 
-            FL = power + turn + strafe;
-            BL = power + turn - strafe;
-            FR = power - turn - strafe;
-            BR = power - turn + strafe;
+            FL = power + turn - strafe;
+            BL = power + turn + strafe;
+            FR = power - turn + strafe;
+            BR = power - turn - strafe;
 
             frontLeft.setPower(FL);
             backLeft.setPower(BL);
