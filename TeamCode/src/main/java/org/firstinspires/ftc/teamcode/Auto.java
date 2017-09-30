@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by FerannoDad on 9/23/17. 123
@@ -33,9 +34,14 @@ public class Auto extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
+
+    //col stores the variable where the glyph is supposed to go
     private String col;
 
-    VuforiaLocalizer vuforia;
+    //servo for the arm that detects which color jewel
+    private Servo colorArm;
+
+    private VuforiaLocalizer vuforia;
 
 
     @Override
@@ -44,6 +50,7 @@ public class Auto extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+        colorArm = hardwareMap.get(Servo.class, "colorArm");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -104,21 +111,14 @@ public class Auto extends LinearOpMode {
             DriveForwardTime(0.2,5);
             TurnLeftTime(0.4,1);
 
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
+
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
+
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
-                //telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.addData("VuMark", "%s visible", vuMark);
 
                 //allows auto mode to know which column to put it in
                 if ((col == null)){
@@ -129,15 +129,9 @@ public class Auto extends LinearOpMode {
 
                 //setting vumark to a variable for use later
 
-
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
