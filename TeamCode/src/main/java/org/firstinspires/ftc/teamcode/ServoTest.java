@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by oliversun on 9/30/17.uuuu
+ * Created by oliversun on 9/30/17.
  */
 
-@TeleOp (name = "Servo Test")
+@TeleOp(name = "Servo Test")
 public class ServoTest extends LinearOpMode {
     private Servo servo1;
     boolean extend;
@@ -18,20 +18,20 @@ public class ServoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         servo1 = hardwareMap.servo.get("servo1");
 
-        servo1.setPosition(0);
+        servo1.setPosition(0.5);
         extend = false;
 
         waitForStart();
 
-        while(opModeIsActive()) {
-            if(!extend) {
-                if(gamepad1.a) {
-                    servo1.setPosition(0.45);
+        while (opModeIsActive()) {
+            if (!extend) {
+                if (gamepad1.a) {
+                    servo1.setPosition(0.1);
                     extend = true;
                 }
             } else {
-                if(gamepad1.a) {
-                    servo1.setPosition(0);
+                if (gamepad1.a) {
+                    servo1.setPosition(0.5);
                     extend = false;
                 }
             }
