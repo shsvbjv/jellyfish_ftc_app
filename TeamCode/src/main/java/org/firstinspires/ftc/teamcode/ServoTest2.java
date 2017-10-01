@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoTest2 extends LinearOpMode {
     private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
-    double START_POS = 0.8;
-    double GRAB_POS = 0.3;
+    double START_POS = 0.1;
+    double GRAB_POS = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException {
