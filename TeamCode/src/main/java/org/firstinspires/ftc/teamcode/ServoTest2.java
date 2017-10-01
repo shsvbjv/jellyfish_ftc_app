@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoTest2 extends LinearOpMode {
     private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
-    double START_POSA = 0.1;
-    double START_POSB = 0.9;
+    double START_POSA = 0.0;
+    double START_POSB = 1;
     double GRAB_POSA = 0.4;
     double GRAB_POSB = 0.6;
 
