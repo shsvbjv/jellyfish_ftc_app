@@ -18,7 +18,7 @@ public class ServoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         servo1 = hardwareMap.servo.get("servo1");
 
-        servo1.setPosition(0.5);
+        servo1.setPosition(0.8);
         extend = false;
 
         waitForStart();
@@ -26,15 +26,16 @@ public class ServoTest extends LinearOpMode {
         while (opModeIsActive()) {
             if (!extend) {
                 if (gamepad1.a) {
-                    servo1.setPosition(0.1);
+                    servo1.setPosition(0.8);
                     extend = true;
                 }
             } else {
                 if (gamepad1.a) {
-                    servo1.setPosition(0.5);
+                    servo1.setPosition(0.2);
                     extend = false;
                 }
             }
+            wait(50);
         }
     }
 }

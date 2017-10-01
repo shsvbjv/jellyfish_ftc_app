@@ -38,27 +38,33 @@ public class ArcadeTest extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            /*if(gamepad1.left_bumper) {
+            if(gamepad1.left_bumper) {
                 if (gamepad1.left_stick_y > 0) {
                     power = 0.2;
                 } else if (gamepad1.left_stick_y < 0) {
                     power = -0.2;
+                } else {
+                    power = 0;
                 }
                 if(gamepad1.left_stick_x > 0) {
                     strafe = 0.2;
                 } else if (gamepad1.left_stick_x < 0) {
                     strafe = -0.2;
+                } else {
+                    strafe = 0;
                 }
                 if(gamepad1.right_stick_x > 0) {
                     turn = 0.4;
                 } else if(gamepad1.right_stick_x < 0) {
                     turn = -0.4;
+                } else {
+                    turn = 0;
                 }
-            } else {*/
+            } else {
                 power = Range.clip(-gamepad1.left_stick_y , -1, 1);
                 strafe = Range.clip(-gamepad1.left_stick_x , -1, 1);
                 turn = Range.clip(-gamepad1.right_stick_x, -1, 1);
-            //}
+            }
 
             FL = scaleInput(power + turn - strafe);
             BL = scaleInput(power + turn + strafe);
