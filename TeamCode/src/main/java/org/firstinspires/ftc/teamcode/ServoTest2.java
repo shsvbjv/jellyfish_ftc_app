@@ -11,10 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Servo Test 2")
 public class ServoTest2 extends LinearOpMode {
-    private Servo botServL = null;
-    private Servo botServR = null;
-    private Servo topServL = null;
-    private Servo topServR = null;
+    private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
     double START_POS = 0.1;
     double GRAB_POS = 0.4;
@@ -23,6 +20,8 @@ public class ServoTest2 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         botServL = hardwareMap.servo.get("botServL");
         botServR = hardwareMap.servo.get("botServR");
+        topServL = hardwareMap.servo.get("topServL");
+        topServR = hardwareMap.servo.get("topServR")
 
         botServL.setPosition(START_POS);
         botServR.setPosition(START_POS);
