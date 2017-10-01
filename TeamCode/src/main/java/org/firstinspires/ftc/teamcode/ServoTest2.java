@@ -21,7 +21,7 @@ public class ServoTest2 extends LinearOpMode {
         botServL = hardwareMap.servo.get("botServL");
         botServR = hardwareMap.servo.get("botServR");
         topServL = hardwareMap.servo.get("topServL");
-        topServR = hardwareMap.servo.get("topServR")
+        topServR = hardwareMap.servo.get("topServR");
 
         botServL.setPosition(START_POS);
         botServR.setPosition(START_POS);
