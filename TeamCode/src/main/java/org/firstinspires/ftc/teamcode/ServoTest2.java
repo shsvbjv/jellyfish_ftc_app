@@ -11,7 +11,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Servo Test 2")
 public class ServoTest2 extends LinearOpMode {
-    private Servo botServL, botServR, topServL, topServR;
+    private Servo botServL = null;
+    private Servo botServR = null;
+    private Servo topServL = null;
+    private Servo topServR = null;
     boolean extendB, extendT;
     double START_POS = 0.1;
     double GRAB_POS = 0.4;
