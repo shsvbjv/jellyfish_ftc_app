@@ -29,8 +29,8 @@ public class ServoTest2 extends LinearOpMode {
 
         botServL.setPosition(START_POSA);
         botServR.setPosition(START_POSB);
-        topServL.setPosition(START_POSB);
-        topServR.setPosition(START_POSA);
+        topServL.setPosition(START_POSB - 1);
+        topServR.setPosition(START_POSA + 1);
         extendB = false;
         extendT = false;
 
@@ -55,15 +55,15 @@ public class ServoTest2 extends LinearOpMode {
 
             if (!extendT) {
                 if (gamepad1.right_bumper) {
-                    topServL.setPosition(START_POSB + 0.1);
-                    topServR.setPosition(START_POSA - 0.1);
+                    topServL.setPosition(START_POSB - 0.1);
+                    topServR.setPosition(START_POSA + 0.1);
                     extendT = true;
                     sleep(300);
                 }
             } else {
                 if (gamepad1.right_bumper) {
-                    topServL.setPosition(GRAB_POSB + 0.1);
-                    topServR.setPosition(GRAB_POSA - 0.1);
+                    topServL.setPosition(GRAB_POSB - 0.1);
+                    topServR.setPosition(GRAB_POSA + 0.1);
                     extendT = false;
                     sleep(300);
                 }
