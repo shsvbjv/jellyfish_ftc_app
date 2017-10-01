@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+import java.util.*;
+import java.util.Vector;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import java.lang.String;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -28,9 +30,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-
 /**
  * Created by FerannoDad on 9/23/17. 123
  */
@@ -41,27 +40,48 @@ public class Auto extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
+    private Servo servo1;
 
-    //col stores the variable where the glyph is supposed to go
-    private String col;
+    GyroSensor sensorGyro;
+    ModernRoboticsI2cGyro mrGryo;
 
-    //servo for the arm that detects which color jewel
-    //private Servo colorArm;
+    VuforiaLocalizer vuforia;
 
-    ColorSensor colorSensor;
-
-    private VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        //initialize motors and servos
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
-        //colorArm = hardwareMap.get(Servo.class, "colorArm");
+
+        servo1 = hardwareMap.servo.get("servo");
+
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        //initialize encoders
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //initialize gryo
+
+        sensorGyro = hardwareMap.gyroSensor.get("gryo");
+        mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
+        int Accumulated; //total rotation: left, right
+        int target = 0;
+
+        sleep(1000);
+        mrGryo.calibrate();
+        while (mrGryo.isCalibrating()) {
+            //wait for calibrating to finish
+        }
+
+
+//------------------------------------------------------------------------------------------------------------------------------
          /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -110,83 +130,38 @@ public class Auto extends LinearOpMode {
 
         relicTrackables.activate();
 
-        //color stuffs
-        /*
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F,0F,0F};
 
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-        // bPrevState and bCurrState represent the previous and current state of the button.
-        boolean bPrevState = false;
-        boolean bCurrState = false;
-
-        // bLedOn represents the state of the LED.
-        boolean bLedOn = true;
-
-        // get a reference to our ColorSensor object.
-        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
-
-        // Set the LED in the beginning
-        colorSensor.enableLed(bLedOn);
-
-        // wait for the start button to be pressed.
-        waitForStart();
-
-        // while the op mode is active, loop and read the RGB data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-        */
-
+//------------------------------------------------------------------------------------------------------------------------------
         //start Autonomous
         waitForStart();
         while (opModeIsActive()) {
-            DriveForwardTime(0.2,5);
-            TurnLeftTime(0.4,1);
-            DriveForwardTime(0.2,5);
-            TurnLeftTime(0.4,1);
-            DriveForwardTime(100,5);
+            /*DriveForwardTime(0.2,5000);
+            TurnLeftTime(0.4,1000);
+            DriveForwardTime(0.2,5000);
+            TurnLeftTime(0.4,1000);*/
 
-            /*
-            //color sensor
-            // check the status of the x button on either gamepad.
-            bCurrState = gamepad1.x;
-
-            // check for button state transitions.
-            if (bCurrState && (bCurrState != bPrevState)) {
-
-                // button is transitioning to a pressed state. So Toggle LED
-                bLedOn = !bLedOn;
-                colorSensor.enableLed(bLedOn);
-            }
-
+            /**
+             * See if any of the instances of {@link relicTemplate} are currently visible.
+             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
+             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
+             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
+             */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                //allows auto mode to know which column to put it in
-                if ((col == null)){
-                    col = "" + vuMark;
-
-                }
-                telemetry.addData("Var that auto uses", "%s" , col);
-                */
-
-                //setting vumark to a variable for use later
-
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
-            /*
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
@@ -201,76 +176,126 @@ public class Auto extends LinearOpMode {
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
                 }
-            }
-            else {
+            } else {
                 telemetry.addData("VuMark", "not visible");
             }
 
             telemetry.update();
-
-            // update previous state variable.
-            //bPrevState = bCurrState;
-
-            // convert the RGB values to HSV values.
-            Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-
-            // send the info back to driver station using telemetry function.
-            telemetry.addData("LED", bLedOn ? "On" : "Off");
-            telemetry.addData("Clear", colorSensor.alpha());
-            telemetry.addData("Red  ", colorSensor.red());
-            telemetry.addData("Green", colorSensor.green());
-            telemetry.addData("Blue ", colorSensor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
-            */
-            telemetry.update();
         }
+
+//------------------------------------------------------------------------------------------------------------------------------
+        while(opModeIsActive()){
+            turn(target+45);
+            sleep(1000);
+            turn(target-45);
+            sleep(1000);
+
+            turnAbsolute(target);
+            telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+            waitOneFullHardwareCycle();
+        }
+
     }
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-        }
+    }
 
-    //Useful functions
-    public void DriveForward(double power){
+    //Driving Power Functions
+    public void StopDriving() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
+
+    public void DriveForward(double power) {
         frontLeft.setPower(-power);
         frontRight.setPower(-power);
         backLeft.setPower(-power);
         backRight.setPower(-power);
 
     }
-    public void TurnLeft(double power){
+
+    public void TurnLeft(double power) {
         frontLeft.setPower(-power);
         frontRight.setPower(power);
         backLeft.setPower(-power);
         backRight.setPower(power);
 
     }
-    public void TurnLeftTime(double power, long time) throws InterruptedException{
-        TurnLeft(power);
-        Thread.sleep(time);
-    }
-    public void TurnRightTime(double power, long time) throws InterruptedException{
+
+    public void TurnRight(double power) {
         TurnLeft(-power);
-        Thread.sleep(time);
-    }
-    public void DriveForwardTime(double power, long time) throws InterruptedException{
-        DriveForward(power);
-        Thread.sleep(time);
+
     }
 
-    public void DriveBackwardTime(double power, long time) throws InterruptedException{
+    public void DriveBackward(double power) {
         DriveForward(-power);
-        Thread.sleep(time);
     }
 
+    //Encoder Functions
+    public void DriveForwardDistance(int power, int distance) {
+        //reset encoders
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
+
+        DriveForward(power);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        StopDriving();
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    public void DriveBackwardDistance(int power, int distance) {
+        DriveForwardDistance(-power, distance);
+    }
+
+    //Turning Function
+
+    public void turn(int target) throws InterruptedException{
+        turnAbsolute(target+mrGryo.getIntegratedZValue());
+    }
+
+    public void turnAbsolute(int target) throws InterruptedException {
+        int Accumulated = mrGryo.getIntegratedZValue(); //sets gryo readings to accumulated
+        double turnspeed = 0.15;
+
+        while (Accumulated - target > 3) {
+            if (Accumulated > target) { //if gryo is positive, turn left
+                TurnLeft(turnspeed);
+            }
+            if (Accumulated < target) { // if gryo is negative, turn right
+                TurnRight(turnspeed);
+            }
+
+            waitOneFullHardwareCycle();
+            Accumulated = mrGryo.getIntegratedZValue();
+            telemetry.addData("1. accu", String.format("%03d", Accumulated));
+
+        }
+        StopDriving();
+        telemetry.addData("1. accu", String.format("%03d", Accumulated));
+        waitOneFullHardwareCycle();
+    }
 
 }
