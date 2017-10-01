@@ -28,14 +28,15 @@ public class ServoTest extends LinearOpMode {
                 if (gamepad1.a) {
                     servo1.setPosition(0.8);
                     extend = true;
+                    wait(50);
                 }
             } else {
                 if (gamepad1.a) {
                     servo1.setPosition(0.2);
                     extend = false;
+                    wait(50);
                 }
             }
-            wait(50);
         }
     }
 }
