@@ -37,8 +37,8 @@ public class ServoTest2 extends LinearOpMode {
         while (opModeIsActive()) {
             if (!extendB) {
                 if (gamepad1.left_bumper) {
-                    botServL.setPosition(START_POSA);
-                    botServR.setPosition(START_POSB);
+                    botServL.setPosition(0);
+                    botServR.setPosition(1);
                     extendB = true;
                     sleep(300);
                 }
@@ -66,6 +66,11 @@ public class ServoTest2 extends LinearOpMode {
                     sleep(300);
                 }
             }
+            telemetry.addData("BL", botServL.getPosition());
+            telemetry.addData("BR", botServR.getPosition());
+            telemetry.addData("TL", topServL.getPosition());
+            telemetry.addData("TR", topServR.getPosition());
+            telemetry.update();
         }
     }
 }
