@@ -23,6 +23,8 @@ public class ServoTest2 extends LinearOpMode {
 
         botServL.setPosition(START_POS);
         botServR.setPosition(START_POS);
+        topServL.setPosition(START_POS);
+        topServR.setPosition(START_POS);
         extendB = false;
         extendT = false;
 
