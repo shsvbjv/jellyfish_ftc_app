@@ -66,6 +66,7 @@ public class Auto extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        int rev=1120; //one revolution
 
         //initialize gryo
 
@@ -181,10 +182,11 @@ public class Auto extends LinearOpMode {
             }
 
             telemetry.update();
-        }
 
 //------------------------------------------------------------------------------------------------------------------------------
-        while(opModeIsActive()){
+
+            DriveForwardDistance(0.4,5*rev);
+            DriveBackwardDistance(0.4,5*rev);
             turn(target+45);
             sleep(1000);
             turn(target-45);
@@ -235,7 +237,7 @@ public class Auto extends LinearOpMode {
     }
 
     //Encoder Functions
-    public void DriveForwardDistance(int power, int distance) {
+    public void DriveForwardDistance(double power, int distance) throws InterruptedException{
         //reset encoders
         frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
         frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
@@ -255,6 +257,7 @@ public class Auto extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            turnAbsolute(0);
             //wait until robot stops
         }
 
@@ -266,7 +269,7 @@ public class Auto extends LinearOpMode {
 
     }
 
-    public void DriveBackwardDistance(int power, int distance) {
+    public void DriveBackwardDistance(double power, int distance) throws InterruptedException{
         DriveForwardDistance(-power, distance);
     }
 
