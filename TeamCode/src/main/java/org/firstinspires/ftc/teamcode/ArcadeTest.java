@@ -18,6 +18,12 @@ public class ArcadeTest extends LinearOpMode {
     private DcMotor frontRight;
     private DcMotor backRight;
 
+    //for the winch
+    public DcMotor lWinch;
+    public DcMotor rWinch;
+
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -25,6 +31,10 @@ public class ArcadeTest extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+
+        //for winch
+        rWinch = hardwareMap.dcMotor.get("rWinch");
+        lWinch = hardwareMap.dcMotor.get("lWinch");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -37,6 +47,8 @@ public class ArcadeTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
+
+            Winch();
 
             if(gamepad1.left_bumper) {
                 if (gamepad1.left_stick_y > 0) {
@@ -103,4 +115,15 @@ public class ArcadeTest extends LinearOpMode {
 
         return dScale;
     }
+
+    void Winch(){
+        lWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        rWinch.setPower(scaleInput(gamepad2.right_stick_y));
+
+
+
+    }
+
 }
+
+
