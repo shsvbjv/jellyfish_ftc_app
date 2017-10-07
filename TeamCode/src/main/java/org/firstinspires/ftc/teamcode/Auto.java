@@ -32,7 +32,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by FerannoDad on 9/23/17. 123
+ * Created by Feranno on 9/23/17. 123
  */
 
 @Autonomous(name = "Auto")
