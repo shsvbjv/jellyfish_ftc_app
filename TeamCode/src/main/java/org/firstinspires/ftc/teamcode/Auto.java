@@ -136,6 +136,8 @@ public class Auto extends LinearOpMode {
         //start Autonomous
         waitForStart();
         while (opModeIsActive()) {
+
+
             /*DriveForwardTime(0.2,5000);
             TurnLeftTime(0.4,1000);
             DriveForwardTime(0.2,5000);
