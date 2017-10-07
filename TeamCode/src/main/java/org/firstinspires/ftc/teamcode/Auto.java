@@ -182,17 +182,17 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveForwardDistance(0.4, 5 * rev);
-            DriveBackwardDistance(0.4, 5 * rev);
-
-            turn(target + 45);
-            sleep(1000);
-            turn(target - 45);
-            sleep(1000);
-
-            turnAbsolute(target);
-            telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-            waitOneFullHardwareCycle();
+            for (int y = 0; y < 4; y++) {
+                for (int x = 0; x < 4; x++) {
+                    DriveForwardDistance(0.4, 5 * rev);
+                    sleep(1000);
+                    turn(target + 45);
+                    sleep(1000);
+                }
+                turnAbsolute(target);
+                telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+                waitOneFullHardwareCycle();
+            }
         }
 
     }
@@ -201,6 +201,7 @@ public class Auto extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
+    //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     public void StopDriving() {
         frontLeft.setPower(0);
@@ -267,6 +268,7 @@ public class Auto extends LinearOpMode {
         DriveForward(-power);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
     public void DriveForwardDistance(double power, int distance) throws InterruptedException {
         //reset encoders
@@ -302,7 +304,7 @@ public class Auto extends LinearOpMode {
     public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
         DriveForwardDistance(-power, distance);
     }
-
+//------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
 
     public void turn(int target) throws InterruptedException {
@@ -330,5 +332,8 @@ public class Auto extends LinearOpMode {
         telemetry.addData("1. accu", String.format("%03d", Accumulated));
         waitOneFullHardwareCycle();
     }
+//------------------------------------------------------------------------------------------------------------------------------
+    //Servo function
+
 
 }
