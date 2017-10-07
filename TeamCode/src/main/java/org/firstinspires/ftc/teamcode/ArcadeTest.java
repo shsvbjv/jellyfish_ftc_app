@@ -26,8 +26,8 @@ public class ArcadeTest extends LinearOpMode {
     double GRAB_POSB = 0.6;
 
     //for the winch
-    public DcMotor lWinch;
-    public DcMotor rWinch;
+    //public DcMotor lWinch;
+    //public DcMotor rWinch;
 
 
 
@@ -38,21 +38,26 @@ public class ArcadeTest extends LinearOpMode {
         topServL = hardwareMap.servo.get("topServL");
         topServR = hardwareMap.servo.get("topServR");
 
-        botServL.setPosition(START_POSA);
-        botServR.setPosition(START_POSB);
-        topServL.setPosition(START_POSA);
-        topServR.setPosition(START_POSB);
-        extendB = false;
-        extendT = false;
+        //botServL.setPosition(START_POSA);
+        //botServR.setPosition(START_POSB);
+        //topServL.setPosition(START_POSA);
+        //topServR.setPosition(START_POSB);
+        //extendB = false;
+        //extendT = false;
 
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         //for winch
-        rWinch = hardwareMap.dcMotor.get("rWinch");
-        lWinch = hardwareMap.dcMotor.get("lWinch");
+        //rWinch = hardwareMap.dcMotor.get("rWinch");
+        //lWinch = hardwareMap.dcMotor.get("lWinch");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -68,7 +73,7 @@ public class ArcadeTest extends LinearOpMode {
 
             //Winch();
 
-            if(gamepad1.left_bumper) {
+            /*if(gamepad1.left_bumper) {
                 if (gamepad1.left_stick_y > 0) {
                     power = 0.2;
                 } else if (gamepad1.left_stick_y < 0) {
@@ -90,21 +95,24 @@ public class ArcadeTest extends LinearOpMode {
                 } else {
                     turn = 0;
                 }
-            } else {
+            } else {*/
                 power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
                 strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
                 turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
-            }
+            //}
 
-            FL = power + turn - strafe;
-            BL = power + turn + strafe;
-            FR = power - turn + strafe;
-            BR = power - turn - strafe;
+            FL = power - turn + strafe;
+            BL = power - turn - strafe;
+            FR = power + turn - strafe;
+            BR = power + turn + strafe;
+
+            servo();
 
             frontLeft.setPower(FL);
             backLeft.setPower(BL);
             frontRight.setPower(FR);
             backRight.setPower(BR);
+
 
             telemetry.addData("Slow", gamepad1.left_bumper);
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
@@ -138,7 +146,7 @@ public class ArcadeTest extends LinearOpMode {
     //    lWinch.setPower(scaleInput(gamepad2.right_stick_y));
     //    rWinch.setPower(scaleInput(gamepad2.right_stick_y));
     //}
-    void Servo() {
+    void servo() {
         if (!extendB) {
             if (gamepad1.left_bumper) {
                 botServL.setPosition(0);
