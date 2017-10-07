@@ -68,44 +68,12 @@ public class Arcade extends LinearOpMode {
 
         waitForStart();
 
-<<<<<<< HEAD
-        while(opModeIsActive()) {
-            power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
-            strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
-            turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
-=======
         while (opModeIsActive()) {
 
-            //Winch();
-
-            /*if(gamepad1.left_bumper) {
-                if (gamepad1.left_stick_y > 0) {
-                    power = 0.2;
-                } else if (gamepad1.left_stick_y < 0) {
-                    power = -0.2;
-                } else {
-                    power = 0;
-                }
-                if(gamepad1.right_stick_x > 0) {
-                    strafe = 0.2;
-                } else if (gamepad1.right_stick_x < 0) {
-                    strafe = -0.2;
-                } else {
-                    strafe = 0;
-                }
-                if(gamepad1.left_stick_x > 0) {
-                    turn = 0.4;
-                } else if(gamepad1.left_stick_x < 0) {
-                    turn = -0.4;
-                } else {
-                    turn = 0;
-                }
-            } else {*/
+            Winch();
             power = scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
             turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
-            //}
->>>>>>> 05d48116d95ea245c37dbdce0b70c0f6cb2f85ab
 
             FL = power - turn + strafe;
             BL = power - turn - strafe;
@@ -118,7 +86,7 @@ public class Arcade extends LinearOpMode {
             backRight.setPower(BR);
 
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
-            telemetry.addData("Motor Pos", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
+            telemetry.addData("Motor Pos", "pFL (%.2f), pFR (%.2f), pBL (%.2f), pBR (%.2f)", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
             telemetry.update();
         }
     }
