@@ -46,30 +46,30 @@ public class ArcadeTest extends LinearOpMode {
                 } else {
                     power = 0;
                 }
-                if(gamepad1.left_stick_x > 0) {
+                if(gamepad1.right_stick_x > 0) {
                     strafe = 0.2;
-                } else if (gamepad1.left_stick_x < 0) {
+                } else if (gamepad1.right_stick_x < 0) {
                     strafe = -0.2;
                 } else {
                     strafe = 0;
                 }
-                if(gamepad1.right_stick_x > 0) {
+                if(gamepad1.left_stick_x > 0) {
                     turn = 0.4;
-                } else if(gamepad1.right_stick_x < 0) {
+                } else if(gamepad1.left_stick_x < 0) {
                     turn = -0.4;
                 } else {
                     turn = 0;
                 }
             } else {
-                power = Range.clip(-gamepad1.left_stick_y , -1, 1);
-                strafe = Range.clip(-gamepad1.left_stick_x , -1, 1);
-                turn = Range.clip(-gamepad1.right_stick_x, -1, 1);
+                power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
+                strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
+                turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
             }
 
-            FL = scaleInput(power + turn - strafe);
-            BL = scaleInput(power + turn + strafe);
-            FR = scaleInput(power - turn + strafe);
-            BR = scaleInput(power - turn - strafe);
+            FL = power + turn - strafe;
+            BL = power + turn + strafe;
+            FR = power - turn + strafe;
+            BR = power - turn - strafe;
 
             frontLeft.setPower(FL);
             backLeft.setPower(BL);
