@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  * Manual with Arcade Drive iooio
  */
 
-@TeleOp (name = "Arcade")
+@TeleOp(name = "Arcade")
 public class Arcade extends LinearOpMode {
 
     private DcMotor frontLeft;
@@ -28,7 +28,6 @@ public class Arcade extends LinearOpMode {
     //for the winch
     public DcMotor lWinch;
     public DcMotor rWinch;
-
 
 
     @Override
@@ -69,10 +68,44 @@ public class Arcade extends LinearOpMode {
 
         waitForStart();
 
+<<<<<<< HEAD
         while(opModeIsActive()) {
             power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
             turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
+=======
+        while (opModeIsActive()) {
+
+            //Winch();
+
+            /*if(gamepad1.left_bumper) {
+                if (gamepad1.left_stick_y > 0) {
+                    power = 0.2;
+                } else if (gamepad1.left_stick_y < 0) {
+                    power = -0.2;
+                } else {
+                    power = 0;
+                }
+                if(gamepad1.right_stick_x > 0) {
+                    strafe = 0.2;
+                } else if (gamepad1.right_stick_x < 0) {
+                    strafe = -0.2;
+                } else {
+                    strafe = 0;
+                }
+                if(gamepad1.left_stick_x > 0) {
+                    turn = 0.4;
+                } else if(gamepad1.left_stick_x < 0) {
+                    turn = -0.4;
+                } else {
+                    turn = 0;
+                }
+            } else {*/
+            power = scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+            strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
+            turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
+            //}
+>>>>>>> 05d48116d95ea245c37dbdce0b70c0f6cb2f85ab
 
             FL = power - turn + strafe;
             BL = power - turn - strafe;
@@ -90,9 +123,9 @@ public class Arcade extends LinearOpMode {
         }
     }
 
-    double scaleInput(double dVal)  {
-        double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
+    double scaleInput(double dVal) {
+        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
+                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 
         // get the corresponding index for the scaleInput array.
         int index = (int) (dVal * 16.0);

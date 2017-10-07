@@ -19,7 +19,6 @@ public class ServoTest2 extends LinearOpMode {
     double GRAB_POSB = 0.6;
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         botServL = hardwareMap.servo.get("botServL");

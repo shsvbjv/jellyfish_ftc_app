@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -31,7 +32,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by FerannoDad on 9/23/17. 123
+ * Created by Feranno on 9/23/17. 123
  */
 
 @Autonomous(name = "Auto")
@@ -66,7 +67,7 @@ public class Auto extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int rev=1120; //one revolution
+        int rev = 1120; //one revolution
 
         //initialize gryo
 
@@ -137,12 +138,6 @@ public class Auto extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-
-            /*DriveForwardTime(0.2,5000);
-            TurnLeftTime(0.4,1000);
-            DriveForwardTime(0.2,5000);
-            TurnLeftTime(0.4,1000);*/
-
             /**
              * See if any of the instances of {@link relicTemplate} are currently visible.
              * {@link RelicRecoveryVuMark} is an enum which can have the following values:
@@ -186,12 +181,13 @@ public class Auto extends LinearOpMode {
             telemetry.update();
 
 //------------------------------------------------------------------------------------------------------------------------------
+            //turning and driving test
+            DriveForwardDistance(0.4, 5 * rev);
+            DriveBackwardDistance(0.4, 5 * rev);
 
-            DriveForwardDistance(0.4,5*rev);
-            DriveBackwardDistance(0.4,5*rev);
-            turn(target+45);
+            turn(target + 45);
             sleep(1000);
-            turn(target-45);
+            turn(target - 45);
             sleep(1000);
 
             turnAbsolute(target);
@@ -213,11 +209,44 @@ public class Auto extends LinearOpMode {
         backRight.setPower(0);
     }
 
+    //distance=rate*duration duration=distance/rate
     public void DriveForward(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(-power);
-        backLeft.setPower(-power);
-        backRight.setPower(-power);
+       /* double leftSpeed;
+        double rightSpeed;
+
+        double target = mrGryo.getIntegratedZValue();
+        double startPosition = frontLeft.getCurrentPosition();
+
+        while (frontLeft.getCurrentPosition() < duration + startPosition) {
+            int zAccumulated = mrGryo.getIntegratedZValue();
+            leftSpeed = power + (zAccumulated - target) / 100;
+            rightSpeed = power - (zAccumulated - target) / 100;
+
+            leftSpeed = Range.clip(leftSpeed, -1, 1);
+            rightSpeed = Range.clip(rightSpeed, -1, 1);
+
+            frontLeft.setPower(leftSpeed);
+            backLeft.setPower(leftSpeed);
+            frontRight.setPower(rightSpeed);
+            backRight.setPower(rightSpeed);
+
+            telemetry.addData("1. frontLeft", frontLeft.getPower());
+            telemetry.addData("2. backLeft", backLeft.getPower());
+            telemetry.addData("3. frontRight", frontRight.getPower());
+            telemetry.addData("4. backRight", backRight.getPower());
+            telemetry.addData("5. Distance to go", (duration + startPosition) - frontLeft.getCurrentPosition());
+
+            waitOneFullHardwareCycle();
+        }
+
+        StopDriving();
+        waitOneFullHardwareCycle();
+        */
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+
 
     }
 
@@ -239,7 +268,7 @@ public class Auto extends LinearOpMode {
     }
 
     //Encoder Functions
-    public void DriveForwardDistance(double power, int distance) throws InterruptedException{
+    public void DriveForwardDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
         frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
@@ -259,7 +288,6 @@ public class Auto extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            turnAbsolute(0);
             //wait until robot stops
         }
 
@@ -271,14 +299,14 @@ public class Auto extends LinearOpMode {
 
     }
 
-    public void DriveBackwardDistance(double power, int distance) throws InterruptedException{
+    public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
         DriveForwardDistance(-power, distance);
     }
 
     //Turning Function
 
-    public void turn(int target) throws InterruptedException{
-        turnAbsolute(target+mrGryo.getIntegratedZValue());
+    public void turn(int target) throws InterruptedException {
+        turnAbsolute(target + mrGryo.getIntegratedZValue());
     }
 
     public void turnAbsolute(int target) throws InterruptedException {
