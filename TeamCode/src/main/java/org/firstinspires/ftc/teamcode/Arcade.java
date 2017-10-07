@@ -18,7 +18,7 @@ public class Arcade extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
-    //private Servo botServL, botServR, topServL, topServR;
+    private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
     double START_POSA = 0.0;
     double START_POSB = 1;
@@ -26,24 +26,24 @@ public class Arcade extends LinearOpMode {
     double GRAB_POSB = 0.6;
 
     //for the winch
-    //public DcMotor lWinch;
-    //public DcMotor rWinch;
+    public DcMotor lWinch;
+    public DcMotor rWinch;
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //botServL = hardwareMap.servo.get("botServL");
-        //botServR = hardwareMap.servo.get("botServR");
-        //topServL = hardwareMap.servo.get("topServL");
-        //topServR = hardwareMap.servo.get("topServR");
+        botServL = hardwareMap.servo.get("botServL");
+        botServR = hardwareMap.servo.get("botServR");
+        topServL = hardwareMap.servo.get("topServL");
+        topServR = hardwareMap.servo.get("topServR");
 
-        //botServL.setPosition(START_POSA);
-        //botServR.setPosition(START_POSB);
-        //topServL.setPosition(START_POSA);
-        //topServR.setPosition(START_POSB);
-        //extendB = false;
-        //extendT = false;
+        botServL.setPosition(START_POSA);
+        botServR.setPosition(START_POSB);
+        topServL.setPosition(START_POSA);
+        topServR.setPosition(START_POSB);
+        extendB = false;
+        extendT = false;
 
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -56,8 +56,8 @@ public class Arcade extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //for winch
-        //rWinch = hardwareMap.dcMotor.get("rWinch");
-        //lWinch = hardwareMap.dcMotor.get("lWinch");
+        rWinch = hardwareMap.dcMotor.get("rWinch");
+        lWinch = hardwareMap.dcMotor.get("lWinch");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -70,52 +70,22 @@ public class Arcade extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-
-            //Winch();
-
-            /*if(gamepad1.left_bumper) {
-                if (gamepad1.left_stick_y > 0) {
-                    power = 0.2;
-                } else if (gamepad1.left_stick_y < 0) {
-                    power = -0.2;
-                } else {
-                    power = 0;
-                }
-                if(gamepad1.right_stick_x > 0) {
-                    strafe = 0.2;
-                } else if (gamepad1.right_stick_x < 0) {
-                    strafe = -0.2;
-                } else {
-                    strafe = 0;
-                }
-                if(gamepad1.left_stick_x > 0) {
-                    turn = 0.4;
-                } else if(gamepad1.left_stick_x < 0) {
-                    turn = -0.4;
-                } else {
-                    turn = 0;
-                }
-            } else {*/
-                power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
-                strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
-                turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
-            //}
+            power = scaleInput(Range.clip(-gamepad1.left_stick_y , -1, 1));
+            strafe = scaleInput(Range.clip(-gamepad1.right_stick_x , -1, 1));
+            turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
 
             FL = power - turn + strafe;
             BL = power - turn - strafe;
             FR = power + turn - strafe;
             BR = power + turn + strafe;
 
-            //servo();
-
             frontLeft.setPower(FL);
             backLeft.setPower(BL);
             frontRight.setPower(FR);
             backRight.setPower(BR);
 
-
-            telemetry.addData("Slow", gamepad1.left_bumper);
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
+            telemetry.addData("Motor Pos", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -142,11 +112,11 @@ public class Arcade extends LinearOpMode {
         return dScale;
     }
 
-    //void Winch(){
-    //    lWinch.setPower(scaleInput(gamepad2.right_stick_y));
-    //    rWinch.setPower(scaleInput(gamepad2.right_stick_y));
-    //}
-    /*void servo() {
+    void Winch(){
+        lWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        rWinch.setPower(scaleInput(gamepad2.right_stick_y));
+    }
+    void servo() {
         if (!extendB) {
             if (gamepad1.left_bumper) {
                 botServL.setPosition(0);
@@ -183,7 +153,7 @@ public class Arcade extends LinearOpMode {
         telemetry.addData("TL", topServL.getPosition());
         telemetry.addData("TR", topServR.getPosition());
         telemetry.update();
-    }*/
+    }
 }
 
 
