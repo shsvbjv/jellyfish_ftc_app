@@ -18,7 +18,7 @@ public class ArcadeTest extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
-    private Servo botServL, botServR, topServL, topServR;
+    //private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
     double START_POSA = 0.0;
     double START_POSB = 1;
@@ -33,10 +33,10 @@ public class ArcadeTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        botServL = hardwareMap.servo.get("botServL");
-        botServR = hardwareMap.servo.get("botServR");
-        topServL = hardwareMap.servo.get("topServL");
-        topServR = hardwareMap.servo.get("topServR");
+        //botServL = hardwareMap.servo.get("botServL");
+        //botServR = hardwareMap.servo.get("botServR");
+        //topServL = hardwareMap.servo.get("topServL");
+        //topServR = hardwareMap.servo.get("topServR");
 
         //botServL.setPosition(START_POSA);
         //botServR.setPosition(START_POSB);
@@ -106,7 +106,7 @@ public class ArcadeTest extends LinearOpMode {
             FR = power + turn - strafe;
             BR = power + turn + strafe;
 
-            servo();
+            //servo();
 
             frontLeft.setPower(FL);
             backLeft.setPower(BL);
@@ -146,7 +146,7 @@ public class ArcadeTest extends LinearOpMode {
     //    lWinch.setPower(scaleInput(gamepad2.right_stick_y));
     //    rWinch.setPower(scaleInput(gamepad2.right_stick_y));
     //}
-    void servo() {
+    /*void servo() {
         if (!extendB) {
             if (gamepad1.left_bumper) {
                 botServL.setPosition(0);
@@ -183,7 +183,7 @@ public class ArcadeTest extends LinearOpMode {
         telemetry.addData("TL", topServL.getPosition());
         telemetry.addData("TR", topServR.getPosition());
         telemetry.update();
-    }
+    }*/
 }
 
 
