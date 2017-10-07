@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp (name = "Arcade")
-public class ArcadeTest extends LinearOpMode {
+public class Arcade extends LinearOpMode {
 
     private DcMotor frontLeft;
     private DcMotor backLeft;
