@@ -181,7 +181,7 @@ public class Auto extends LinearOpMode {
             telemetry.update();
 
 //------------------------------------------------------------------------------------------------------------------------------
-
+            //turning and driving test
             DriveForwardDistance(0.4, 5 * rev);
             DriveBackwardDistance(0.4, 5 * rev);
 
@@ -210,7 +210,7 @@ public class Auto extends LinearOpMode {
     }
 
     //distance=rate*duration duration=distance/rate
-    public void DriveForward(double power){
+    public void DriveForward(double power) {
        /* double leftSpeed;
         double rightSpeed;
 
