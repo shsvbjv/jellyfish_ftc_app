@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by KyleP on 10/6/2017.
  */
 
-public class HMap {
+public class hMap {
     public DcMotor frontLeft;
     public DcMotor backLeft;
     public DcMotor frontRight;
@@ -20,7 +20,7 @@ public class HMap {
 
     public HardwareMap HMap =  null;
 
-    public HMap(){
+    public hMap(){
 
     }
 
