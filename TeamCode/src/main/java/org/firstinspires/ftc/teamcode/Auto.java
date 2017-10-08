@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
-
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -48,6 +48,10 @@ public class Auto extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
 
+    ColorSensor color_sensor;
+
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,6 +73,9 @@ public class Auto extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int rev = 1120; //one revolution
 
+        //color sensor
+        color_sensor = hardwareMap.colorSensor.get("color");
+
         //initialize gryo
 
         sensorGyro = hardwareMap.gyroSensor.get("gryo");
@@ -81,6 +88,7 @@ public class Auto extends LinearOpMode {
         while (mrGryo.isCalibrating()) {
             //wait for calibrating to finish
         }
+
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -182,18 +190,19 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-
-            for (int i = 0; i < 4; i++) {
-                DriveForwardDistance(0.4, 5 * rev);
-                sleep(1000);
-                turn(target + 45);
-                sleep(1000);
+            for (int y = 0; y < 4; y++) {
+                for (int x = 0; x < 4; x++) {
+                    DriveForwardDistance(0.4, 5 * rev);
+                    sleep(1000);
+                   // turn(target + 45);
+                    DriveBackwardDistance(0.4,5*rev);
+                    sleep(1000);
+                }
+           //     turnAbsolute(target);
+            //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+                waitOneFullHardwareCycle();
             }
-            turnAbsolute(target);
-            telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-            waitOneFullHardwareCycle();
         }
-
 
     }
 
@@ -333,7 +342,17 @@ public class Auto extends LinearOpMode {
         waitOneFullHardwareCycle();
     }
 //------------------------------------------------------------------------------------------------------------------------------
-    //Servo function
+    //Color Sensor Boolean
+    public boolean isJewelRed (){
+        if(color_sensor.red()>color_sensor.blue()+5){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
+
+//------------------------------------------------------------------------------------------------------------------------------
 
 }
