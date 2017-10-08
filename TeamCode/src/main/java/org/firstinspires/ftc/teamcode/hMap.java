@@ -53,7 +53,7 @@ public class hMap {
         //rWinch = hardwareMap.dcMotor.get("rWinch");
         //lWinch = hardwareMap.dcMotor.get("lWinch");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
     }
 }

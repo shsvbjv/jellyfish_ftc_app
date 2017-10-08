@@ -177,13 +177,13 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveForwardDistance(0.4, 5 * rev);
+            DriveForwardDistance(0.2, 5 * rev);
             sleep(300);
-            DriveRightDistance(0.4, 5 * rev);
+            DriveRightDistance(0.2, 5 * rev);
             sleep(300);
-            DriveBackwardDistance(0.4, 5 * rev);
+            DriveBackwardDistance(0.2, 5 * rev);
             sleep(300);
-            DriveLeftDistance(0.4, 5 * rev);
+            DriveLeftDistance(0.2, 5 * rev);
             sleep(300);
 
             waitOneFullHardwareCycle();
