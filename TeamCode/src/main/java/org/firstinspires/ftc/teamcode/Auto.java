@@ -339,6 +339,10 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //Color Sensor Boolean
     /*public boolean isJewelRed (){
+        telemetry.addData("blue value", color_sensor.blue());
+        telemetry.addData("red value", color_sensor.red());
+
+
         if(color_sensor.red()>color_sensor.blue()+5){
             return true;
         }
