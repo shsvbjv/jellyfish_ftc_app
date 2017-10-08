@@ -43,9 +43,6 @@ public class Auto extends LinearOpMode {
     private DcMotor backRight;
     private Servo servo1;
 
-    //GyroSensor sensorGyro;
-    //ModernRoboticsI2cGyro mrGryo;
-
     VuforiaLocalizer vuforia;
 
     //ColorSensor color_sensor;
@@ -73,19 +70,6 @@ public class Auto extends LinearOpMode {
 
         //color sensor
         //color_sensor = hardwareMap.colorSensor.get("color");
-
-        //initialize gryo
-
-        //sensorGyro = hardwareMap.gyroSensor.get("gryo");
-        //mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
-        //int Accumulated; //total rotation: left, right
-        //int target = 0;
-
-        //sleep(1000);
-        //mrGryo.calibrate();
-        //while (mrGryo.isCalibrating()) {
-        //wait for calibrating to finish
-        //}
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -188,13 +172,9 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
             DriveForwardDistance(0.4, 5 * rev);
-            DriveRightDistance(0.4,5*rev);
+            DriveRightDistance(0.4, 5 * rev);
             DriveBackwardDistance(0.4, 5 * rev);
-            DriveLeftDistance(0.4, 5*rev);
-
-
-            //     turnAbsolute(target);
-            //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+            DriveLeftDistance(0.4, 5 * rev);
             waitOneFullHardwareCycle();
         }
     }
@@ -343,38 +323,10 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
 
-    /*public void turn(int target) throws InterruptedException {
-        turnAbsolute(target + mrGryo.getIntegratedZValue());
-    }
 
-    public void turnAbsolute(int target) throws InterruptedException {
-        int Accumulated = mrGryo.getIntegratedZValue(); //sets gryo readings to accumulated
-        double turnspeed = 0.15;
-
-        while (Accumulated - target > 3) {
-            if (Accumulated > target) { //if gryo is positive, turn left
-                TurnLeft(turnspeed);
-            }
-            if (Accumulated < target) { // if gryo is negative, turn right
-                TurnRight(turnspeed);
-            }
-
-            waitOneFullHardwareCycle();
-            Accumulated = mrGryo.getIntegratedZValue();
-            telemetry.addData("1. accu", String.format("%03d", Accumulated));
-
-        }
-        StopDriving();
-        telemetry.addData("1. accu", String.format("%03d", Accumulated));
-        waitOneFullHardwareCycle();
-    }*/
 //------------------------------------------------------------------------------------------------------------------------------
     //Color Sensor Boolean
     /*public boolean isJewelRed (){
-        telemetry.addData("blue value", color_sensor.blue());
-        telemetry.addData("red value", color_sensor.red());
-
-
         if(color_sensor.red()>color_sensor.blue()+5){
             return true;
         }
