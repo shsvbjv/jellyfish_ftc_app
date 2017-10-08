@@ -14,52 +14,11 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "Arcade")
 public class Arcade extends LinearOpMode {
 
-    private DcMotor frontLeft;
-    private DcMotor backLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private Servo botServL, botServR, topServL, topServR;
-    boolean extendB, extendT;
-    double START_POSA = 0.0;
-    double START_POSB = 1;
-    double GRAB_POSA = 0.4;
-    double GRAB_POSB = 0.6;
-
-    //for the winch
-    public DcMotor lWinch;
-    public DcMotor rWinch;
-
+    hMap robot = new hMap();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        botServL = hardwareMap.servo.get("botServL");
-        botServR = hardwareMap.servo.get("botServR");
-        topServL = hardwareMap.servo.get("topServL");
-        topServR = hardwareMap.servo.get("topServR");
-
-        botServL.setPosition(START_POSA);
-        botServR.setPosition(START_POSB);
-        topServL.setPosition(START_POSA);
-        topServR.setPosition(START_POSB);
-        extendB = false;
-        extendT = false;
-
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //for winch
-        rWinch = hardwareMap.dcMotor.get("rWinch");
-        lWinch = hardwareMap.dcMotor.get("lWinch");
-
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        robot.init(hardwareMap);
 
         double power = 0;
         double strafe = 0;
@@ -80,13 +39,13 @@ public class Arcade extends LinearOpMode {
             FR = power + turn - strafe;
             BR = power + turn + strafe;
 
-            frontLeft.setPower(FL);
-            backLeft.setPower(BL);
-            frontRight.setPower(FR);
-            backRight.setPower(BR);
+            robot.frontLeft.setPower(FL);
+            robot.backLeft.setPower(BL);
+            robot.frontRight.setPower(FR);
+            robot.backRight.setPower(BR);
 
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
-            telemetry.addData("Motor Pos", "pFL (%.2f), pFR (%.2f), pBL (%.2f), pBR (%.2f)", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
+            telemetry.addData("Motor Pos", "pFL (%.2f), pFR (%.2f), pBL (%.2f), pBR (%.2f)", robot.frontLeft.getCurrentPosition(), robot.frontRight.getCurrentPosition(), robot.backLeft.getCurrentPosition(), robot.backRight.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -114,45 +73,45 @@ public class Arcade extends LinearOpMode {
     }
 
     void Winch(){
-        lWinch.setPower(scaleInput(gamepad2.right_stick_y));
-        rWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
     }
     void servo() {
-        if (!extendB) {
+        if (!robot.bChop) {
             if (gamepad1.left_bumper) {
-                botServL.setPosition(0);
-                botServR.setPosition(1);
-                extendB = true;
+                robot.botServL.setPosition(0);
+                robot.botServR.setPosition(1);
+                robot.bChop = true;
                 sleep(300);
             }
         } else {
             if (gamepad1.left_bumper) {
-                botServL.setPosition(GRAB_POSA);
-                botServR.setPosition(GRAB_POSB);
-                extendB = false;
+                robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.bChop = false;
                 sleep(300);
             }
         }
 
-        if (!extendT) {
+        if (!robot.tChop) {
             if (gamepad1.right_bumper) {
-                topServL.setPosition(START_POSB);
-                topServR.setPosition(START_POSA);
-                extendT = true;
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.tChop = true;
                 sleep(300);
             }
         } else {
             if (gamepad1.right_bumper) {
-                topServL.setPosition(GRAB_POSB);
-                topServR.setPosition(GRAB_POSA);
-                extendT = false;
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.tChop = false;
                 sleep(300);
             }
         }
-        telemetry.addData("BL", botServL.getPosition());
-        telemetry.addData("BR", botServR.getPosition());
-        telemetry.addData("TL", topServL.getPosition());
-        telemetry.addData("TR", topServR.getPosition());
+        telemetry.addData("BL", robot.botServL.getPosition());
+        telemetry.addData("BR", robot.botServR.getPosition());
+        telemetry.addData("TL", robot.topServL.getPosition());
+        telemetry.addData("TR", robot.topServR.getPosition());
         telemetry.update();
     }
 }

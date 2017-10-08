@@ -182,18 +182,18 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            for (int y = 0; y < 4; y++) {
-                for (int x = 0; x < 4; x++) {
-                    DriveForwardDistance(0.4, 5 * rev);
-                    sleep(1000);
-                    turn(target + 45);
-                    sleep(1000);
-                }
-                turnAbsolute(target);
-                telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-                waitOneFullHardwareCycle();
+
+            for (int i = 0; i < 4; i++) {
+                DriveForwardDistance(0.4, 5 * rev);
+                sleep(1000);
+                turn(target + 45);
+                sleep(1000);
             }
+            turnAbsolute(target);
+            telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+            waitOneFullHardwareCycle();
         }
+
 
     }
 
