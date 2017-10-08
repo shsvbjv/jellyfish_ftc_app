@@ -43,12 +43,12 @@ public class Auto extends LinearOpMode {
     private DcMotor backRight;
     private Servo servo1;
 
-    GyroSensor sensorGyro;
-    ModernRoboticsI2cGyro mrGryo;
+    //GyroSensor sensorGyro;
+    //ModernRoboticsI2cGyro mrGryo;
 
     VuforiaLocalizer vuforia;
 
-    ColorSensor color_sensor;
+    //ColorSensor color_sensor;
 
 
 
@@ -74,20 +74,20 @@ public class Auto extends LinearOpMode {
         int rev = 1120; //one revolution
 
         //color sensor
-        color_sensor = hardwareMap.colorSensor.get("color");
+        //color_sensor = hardwareMap.colorSensor.get("color");
 
         //initialize gryo
 
-        sensorGyro = hardwareMap.gyroSensor.get("gryo");
-        mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
-        int Accumulated; //total rotation: left, right
-        int target = 0;
+        //sensorGyro = hardwareMap.gyroSensor.get("gryo");
+        //mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
+        //int Accumulated; //total rotation: left, right
+        //int target = 0;
 
-        sleep(1000);
-        mrGryo.calibrate();
-        while (mrGryo.isCalibrating()) {
+        //sleep(1000);
+        //mrGryo.calibrate();
+        //while (mrGryo.isCalibrating()) {
             //wait for calibrating to finish
-        }
+        //}
 
 
 
@@ -190,21 +190,16 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            for (int y = 0; y < 4; y++) {
-                for (int x = 0; x < 4; x++) {
-                    DriveForwardDistance(0.4, 5 * rev);
-                    sleep(1000);
-                   // turn(target + 45);
-                    DriveBackwardDistance(0.4,5*rev);
-                    sleep(1000);
-                }
-           //     turnAbsolute(target);
+            DriveBackwardDistance(0.4, 5*rev);
+            DriveForwardDistance(0.4, 5*rev);
+
+            //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
                 waitOneFullHardwareCycle();
             }
         }
 
-    }
+
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
@@ -316,7 +311,7 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
 
-    public void turn(int target) throws InterruptedException {
+    /*public void turn(int target) throws InterruptedException {
         turnAbsolute(target + mrGryo.getIntegratedZValue());
     }
 
@@ -340,21 +335,17 @@ public class Auto extends LinearOpMode {
         StopDriving();
         telemetry.addData("1. accu", String.format("%03d", Accumulated));
         waitOneFullHardwareCycle();
-    }
+    }*/
 //------------------------------------------------------------------------------------------------------------------------------
     //Color Sensor Boolean
-    public boolean isJewelRed (){
-
-        telemetry.addData("blue value: ", color_sensor.blue());
-        telemetry.addData("red value: ", color_sensor.red());
-
+    /*public boolean isJewelRed (){
         if(color_sensor.red()>color_sensor.blue()+5){
             return true;
         }
         else{
             return false;
         }
-    }
+    }*/
 
 
 //------------------------------------------------------------------------------------------------------------------------------
