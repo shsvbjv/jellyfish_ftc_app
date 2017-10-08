@@ -29,8 +29,8 @@ public class Arcade extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            Winch();
-            power = scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+            //Winch();
+            power = scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
             turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
 
@@ -78,14 +78,14 @@ public class Arcade extends LinearOpMode {
     }
     void servo() {
         if (!robot.bChop) {
-            if (gamepad1.left_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.botServL.setPosition(0);
                 robot.botServR.setPosition(1);
                 robot.bChop = true;
                 sleep(300);
             }
         } else {
-            if (gamepad1.left_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.bChop = false;
@@ -94,14 +94,14 @@ public class Arcade extends LinearOpMode {
         }
 
         if (!robot.tChop) {
-            if (gamepad1.right_bumper) {
+            if (gamepad2.right_bumper) {
                 robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
                 sleep(300);
             }
         } else {
-            if (gamepad1.right_bumper) {
+            if (gamepad2.right_bumper) {
                 robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.topServL.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = false;
