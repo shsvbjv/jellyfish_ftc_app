@@ -41,7 +41,9 @@ public class Auto extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
-    private Servo servo1;
+
+    private Servo botServL, botServR, topServL, topServR;
+
 
     VuforiaLocalizer vuforia;
 
@@ -56,10 +58,14 @@ public class Auto extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
-        servo1 = hardwareMap.servo.get("servo");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        botServL = hardwareMap.servo.get("botServL");
+        botServR = hardwareMap.servo.get("botServR");
+        topServL = hardwareMap.servo.get("topServL");
+        topServR = hardwareMap.servo.get("topServR");
 
         //initialize encoders
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
