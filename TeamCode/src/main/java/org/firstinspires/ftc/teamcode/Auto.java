@@ -51,8 +51,6 @@ public class Auto extends LinearOpMode {
     //ColorSensor color_sensor;
 
 
-
-
     @Override
     public void runOpMode() throws InterruptedException {
         //initialize motors and servos
@@ -86,9 +84,8 @@ public class Auto extends LinearOpMode {
         //sleep(1000);
         //mrGryo.calibrate();
         //while (mrGryo.isCalibrating()) {
-            //wait for calibrating to finish
+        //wait for calibrating to finish
         //}
-
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -190,15 +187,17 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveBackwardDistance(0.4, 5*rev);
-            DriveForwardDistance(0.4, 5*rev);
+            DriveForwardDistance(0.4, 5 * rev);
+            DriveRightDistance(0.4,5*rev);
+            DriveBackwardDistance(0.4, 5 * rev);
+            DriveLeftDistance(0.4, 5*rev);
+
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-                waitOneFullHardwareCycle();
-            }
+            waitOneFullHardwareCycle();
         }
-
+    }
 
 
     String format(OpenGLMatrix transformationMatrix) {
@@ -255,17 +254,15 @@ public class Auto extends LinearOpMode {
 
     }
 
-    public void TurnLeft(double power) {
+    public void DriveLeft(double power) {
         frontLeft.setPower(-power);
         frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
-
+        backLeft.setPower(power);
+        backRight.setPower(-power);
     }
 
-    public void TurnRight(double power) {
-        TurnLeft(-power);
-
+    public void DriveRight(double power) {
+        DriveLeft(-power);
     }
 
     public void DriveBackward(double power) {
@@ -307,6 +304,41 @@ public class Auto extends LinearOpMode {
 
     public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
         DriveForwardDistance(-power, distance);
+    }
+
+    public void DriveLeftDistance(double power, int distance) throws InterruptedException {
+        //reset encoders
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
+
+        DriveLeft(power);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        StopDriving();
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    public void DriveRightDistance(double power, int distance) throws InterruptedException {
+        DriveLeftDistance(-power, distance);
     }
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
