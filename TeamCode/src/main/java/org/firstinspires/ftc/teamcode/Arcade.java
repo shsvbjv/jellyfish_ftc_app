@@ -45,10 +45,6 @@ public class Arcade extends LinearOpMode {
             robot.backRight.setPower(BR);
 
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
-            telemetry.addData("pFL", robot.frontLeft.getCurrentPosition()) ;
-            telemetry.addData("pFR", robot.frontRight.getCurrentPosition());
-            telemetry.addData("pBL", robot.backLeft.getCurrentPosition());
-            telemetry.addData("pBR", robot.backRight.getCurrentPosition());
             telemetry.update();
         }
     }
