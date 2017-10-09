@@ -20,7 +20,7 @@ public class ColorSensorTest extends LinearOpMode {
         color_sensor.enableLed(true);  // Turn the LED on
 
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
-        isJewelRed();
+        isJewelRedFinal();
     }
 
     public boolean isJewelRed (){
