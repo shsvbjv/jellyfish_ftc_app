@@ -34,10 +34,10 @@ public class Arcade extends LinearOpMode {
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
             turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
 
-            FL = power - turn + strafe;
-            BL = power - turn - strafe;
-            FR = power + turn - strafe;
-            BR = power + turn + strafe;
+            FL = power - turn - strafe;
+            BL = power - turn + strafe;
+            FR = power + turn + strafe;
+            BR = power + turn - strafe;
 
             robot.frontLeft.setPower(FL);
             robot.backLeft.setPower(BL);
