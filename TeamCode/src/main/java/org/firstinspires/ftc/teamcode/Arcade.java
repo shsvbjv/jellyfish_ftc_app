@@ -45,7 +45,6 @@ public class Arcade extends LinearOpMode {
             robot.backRight.setPower(BR);
 
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
-            telemetry.addData("Motor Pos", "pFL (%.2f), pFR (%.2f), pBL (%.2f), pBR (%.2f)", robot.frontLeft.getCurrentPosition(), robot.frontRight.getCurrentPosition(), robot.backLeft.getCurrentPosition(), robot.backRight.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -72,6 +71,7 @@ public class Arcade extends LinearOpMode {
         return dScale;
     }
 
+    /*
     void Winch(){
         robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
         robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
@@ -108,12 +108,14 @@ public class Arcade extends LinearOpMode {
                 sleep(300);
             }
         }
+
         telemetry.addData("BL", robot.botServL.getPosition());
         telemetry.addData("BR", robot.botServR.getPosition());
         telemetry.addData("TL", robot.topServL.getPosition());
         telemetry.addData("TR", robot.topServR.getPosition());
         telemetry.update();
+        */
     }
-}
+
 
 
