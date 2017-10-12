@@ -1,59 +1,90 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 /**
- * Created by KyleP on 10/6/2017.
+ * Created by oliversun on 10/7/17.
  */
 
 public class hMap {
-    public DcMotor frontLeft;
-    public DcMotor backLeft;
-    public DcMotor frontRight;
-    public DcMotor backRight;
+    /* Motors */
 
-    public Servo botServL, botServR, topServL, topServR;
+    //Wheels
+    public DcMotor  frontLeft   ;
+    public DcMotor  frontRight  ;
+    public DcMotor  backLeft    ;
+    public DcMotor  backRight   ;
 
-    public HardwareMap HMap =  null;
+    //Winch
+    public DcMotor  lWinch      ;
+    public DcMotor  rWinch      ;
 
-    public hMap(){
+    /* Servos */
 
-    }
+    //Chopstick Servos
+    public Servo    topServL    ;
+    public Servo    topServR    ;
+    public Servo    botServL    ;
+    public Servo    botServR    ;
 
-    public void init (HardwareMap AHwMap){
-        HMap = AHwMap;
+    //Sensor Arm Servo
+    //public Servo    armServo    ;
 
-        botServL = HMap.get(Servo.class, "botServL");
-        botServR = HMap.get(Servo.class, "botServR");
-        topServL = HMap.get(Servo.class, "topServL");
-        topServR = HMap.get(Servo.class, "topServR");
+    //Values for the chopsticks and tail
+    public static final double START_TAIL_POS    = 0.8;
+    public static final double GRAB_TAIL_POS     = 0.3;
+    public static final double START_CHOP_POS_A  = 0.0;
+    public static final double START_CHOP_POS_B  = 1.0;
+    public static final double GRAB_CHOP_POS_A   = 0.4;
+    public static final double GRAB_CHOP_POS_B   = 0.6;
 
-        //botServL.setPosition(START_POSA);
-        //botServR.setPosition(START_POSB);
-        //topServL.setPosition(START_POSA);
-        //topServR.setPosition(START_POSB);
-        //extendB = false;
-        //extendT = false;
+    //boolean for servo function
+    public boolean tail;
+    public boolean tChop;
+    public boolean bChop;
 
-        frontLeft = HMap.get(DcMotor.class, "frontLeft");
-        frontRight = HMap.get(DcMotor.class, "frontRight");
-        backLeft = HMap.get(DcMotor.class, "backLeft");
-        backRight = HMap.get(DcMotor.class, "backRight");
+    HardwareMap hwMap;
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public hMap() {}
 
-        //for winch
-        //rWinch = hardwareMap.dcMotor.get("rWinch");
-        //lWinch = hardwareMap.dcMotor.get("lWinch");
+    public void init(HardwareMap ahwMap) {
+        hwMap = ahwMap;
 
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        /* Motors */
+
+        //Wheels
+        frontLeft   = hwMap.get(DcMotor.class, "frontLeft")     ;
+        frontRight  = hwMap.get(DcMotor.class, "frontRight")    ;
+        backLeft    = hwMap.get(DcMotor.class, "backLeft")      ;
+        backRight   = hwMap.get(DcMotor.class, "backRight")     ;
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE)       ;
+        backLeft.setDirection(DcMotor.Direction.REVERSE)        ;
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        //Winch
+        lWinch      = hwMap.get(DcMotor.class, "lWinch")        ;
+        rWinch      = hwMap.get(DcMotor.class, "rWinch")        ;
+
+        lWinch.setPower(0);
+        rWinch.setPower(0);
+
+        /* Servos */
+        topServL    = hwMap.get(Servo.class, "topServL")        ;
+        topServR    = hwMap.get(Servo.class, "topServR")        ;
+        botServL    = hwMap.get(Servo.class, "topServL")        ;
+        topServR    = hwMap.get(Servo.class, "botServR")        ;
+        //armServo    = hwMap.get(Servo.class, "armServo")        ;
+
+        botServL.setPosition(START_CHOP_POS_A);
+        botServR.setPosition(START_CHOP_POS_B);
+        topServL.setPosition(START_CHOP_POS_B);
+        topServR.setPosition(START_CHOP_POS_A);
     }
 }

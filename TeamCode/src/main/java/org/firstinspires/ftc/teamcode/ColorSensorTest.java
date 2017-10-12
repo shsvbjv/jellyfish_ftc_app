@@ -20,7 +20,13 @@ public class ColorSensorTest extends LinearOpMode {
         color_sensor.enableLed(true);  // Turn the LED on
 
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
-        isJewelRedFinal();
+
+        waitForStart();
+
+        while(opModeIsActive()) {
+            isJewelRedFinal();
+        }
+
     }
 
     public boolean isJewelRed (){
@@ -30,41 +36,32 @@ public class ColorSensorTest extends LinearOpMode {
 
         if(color_sensor.red()>color_sensor.blue()){
             telemetry.addData("The color is ", "red");
+            telemetry.update();
             return true;
         }
         else{
             telemetry.addData("The color is ", "blue");
+            telemetry.update();
             return false;
         }
     }
 
     public boolean isJewelRedFinal(){
-        int count=0;
-        double bar=0.75;
-        int redcount=0;
-        double redpercent;
-        int bluecount=0;
-        double bluepercent=0;
+        int red = 0;
+        int blue = 0;
 
-        while(bar<0.75 && count<20){
-            count+=1;
-            if(isJewelRed()==true){
-                redcount+=1;
-                redpercent=redcount/count;
-                bar=redpercent;
+        for(int i = 0; i < 20; i++) {
+            if(isJewelRed()) {
+                red++;
+            } else if (!isJewelRed()); {
+                blue++;
             }
-            else{
-                bluecount+=1;
-                bluepercent=bluecount/count;
-                bar=bluepercent;
-            }
+        }
 
-        }
-        if(redcount>bluecount){
-            return true;
-        }
-        else{
+        if(red < blue) {
             return false;
+        } else if(blue < red) {
+            return true;
         }
     }
 
