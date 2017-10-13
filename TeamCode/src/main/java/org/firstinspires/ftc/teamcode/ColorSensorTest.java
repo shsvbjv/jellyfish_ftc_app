@@ -46,23 +46,27 @@ public class ColorSensorTest extends LinearOpMode {
         }
     }
 
-    public boolean isJewelRedFinal(){
+    public boolean isJewelRedFinal() {
         int red = 0;
         int blue = 0;
+        Boolean isRed = null;
 
-        for(int i = 0; i < 20; i++) {
-            if(isJewelRed()) {
+        for (int i = 0; i < 20; i++) {
+            if (isJewelRed()) {
                 red++;
-            } else if (!isJewelRed()); {
+            } else if (!isJewelRed()) ;
+            {
                 blue++;
             }
         }
 
-        if(red < blue) {
-            return false;
-        } else if(blue < red) {
-            return true;
+        if (red < blue) {
+            isRed = false;
+        } else if (blue < red) {
+            isRed = true;
         }
-    }
 
+        return isRed;
+
+    }
 }

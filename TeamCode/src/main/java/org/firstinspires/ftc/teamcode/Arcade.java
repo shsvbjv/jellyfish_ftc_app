@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Manual with Arcade Drive iooio
+ * Manual with Arcade Drive
  */
 
 @TeleOp(name = "Arcade")
