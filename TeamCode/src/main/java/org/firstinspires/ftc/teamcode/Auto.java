@@ -337,17 +337,5 @@ public class Auto extends LinearOpMode {
         waitOneFullHardwareCycle();
     }*/
 //------------------------------------------------------------------------------------------------------------------------------
-    //Color Sensor Boolean
-    /*public boolean isJewelRed (){
-        if(color_sensor.red()>color_sensor.blue()+5){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }*/
-
-
-//------------------------------------------------------------------------------------------------------------------------------
 
 }
