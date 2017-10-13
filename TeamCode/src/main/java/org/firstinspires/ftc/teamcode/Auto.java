@@ -190,11 +190,15 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
+            VerticalDriveDistance(0.4, 1*rev);
+            HorizontalStratffingDistance(-0.4,2*rev);
+            HorizontalStratffingDistance(0.4, 1*rev);
+            HorizontalStratffingDistance(0.4, 5*rev);
 
-            DriveForwardDistance(0.4, 5);
-            DriveRightDistance(0.4,5);
-            DriveLeftDistance(0.4,5);
-            DriveBackwardDistance(0.4, 5);
+
+
+
+
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -218,7 +222,8 @@ public class Auto extends LinearOpMode {
     }
 
     //distance=rate*duration duration=distance/rate
-    public void DriveForward(double power) {
+    //power drives forward, -power drives backward
+    public void VerticalDrive(double power) {
        /* double leftSpeed;
         double rightSpeed;
 
@@ -257,27 +262,17 @@ public class Auto extends LinearOpMode {
 
 
     }
-
-    public void TurnLeft(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
-
-    }
-
-    public void TurnRight(double power) {
-        TurnLeft(-power);
-
-    }
-
-    public void DriveBackward(double power) {
-        DriveForward(-power);
+    //power drives right, -power drives left
+    public void HorizontalStraffing(double power){
+        frontLeft.setPower(power);
+        frontRight.setPower(-power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
-    public void DriveForwardDistance(double power, int distance) throws InterruptedException {
+    public void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
         frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
@@ -289,7 +284,7 @@ public class Auto extends LinearOpMode {
         backLeft.setTargetPosition(distance);
         backRight.setTargetPosition(distance);
 
-        DriveForward(power);
+        VerticalDrive(power);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -308,8 +303,35 @@ public class Auto extends LinearOpMode {
 
     }
 
-    public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
-        DriveForwardDistance(-power, distance);
+    public void HorizontalStratffingDistance(double power, int distance) throws InterruptedException {
+        //reset encoders
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
+
+        HorizontalStraffing(power);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        StopDriving();
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
