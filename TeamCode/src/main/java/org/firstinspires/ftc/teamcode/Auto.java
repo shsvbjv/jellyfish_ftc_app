@@ -190,8 +190,11 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveBackwardDistance(0.4, 5);
+
             DriveForwardDistance(0.4, 5);
+            DriveRightDistance(0.4,5);
+            DriveLeftDistance(0.4,5);
+            DriveBackwardDistance(0.4, 5);
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -254,6 +257,16 @@ public class Auto extends LinearOpMode {
 
 
     }
+    public void DriveLeft(double power){
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
+    }
+
+    public void DriveRight(double power){
+        DriveLeft(-power);
+    }
 
     public void TurnLeft(double power) {
         frontLeft.setPower(-power);
@@ -307,6 +320,40 @@ public class Auto extends LinearOpMode {
 
     public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
         DriveForwardDistance(-power, distance);
+    }
+
+    public void DriveLeftDistance(double power, int distance) throws InterruptedException{
+        //reset encoders
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
+
+        DriveLeft(power);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        StopDriving();
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+    public void DriveRightDistance(double power, int distance) throws InterruptedException{
+        DriveLeftDistance(-power,distance);
     }
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
