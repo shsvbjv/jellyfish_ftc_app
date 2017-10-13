@@ -37,11 +37,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
-    private DcMotor frontLeft;
-    private DcMotor backLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private Servo servo1;
+
+    hMap robot = new hMap();
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -55,22 +52,8 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //initialize motors and servos
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
+        robot.init(hardwareMap);
 
-        servo1 = hardwareMap.servo.get("servo");
-
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-
-        //initialize encoders
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int rev = 1120; //one revolution
 
         //color sensor
@@ -190,8 +173,7 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveBackwardDistance(0.4, 5);
-            DriveForwardDistance(0.4, 5);
+            DriveForwardDistance(0.2, 1*rev);
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -208,10 +190,10 @@ public class Auto extends LinearOpMode {
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     public void StopDriving() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(0);
     }
 
     //distance=rate*duration duration=distance/rate
@@ -247,19 +229,19 @@ public class Auto extends LinearOpMode {
         StopDriving();
         waitOneFullHardwareCycle();
         */
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
+        robot.frontLeft.setPower(power);
+        robot.frontRight.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.backRight.setPower(power);
 
 
     }
 
     public void TurnLeft(double power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
+        robot.frontLeft.setPower(-power);
+        robot.frontRight.setPower(power);
+        robot.backLeft.setPower(-power);
+        robot.backRight.setPower(power);
 
     }
 
@@ -276,32 +258,32 @@ public class Auto extends LinearOpMode {
     //Encoder Functions
     public void DriveForwardDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
 
-        frontLeft.setTargetPosition(distance);
-        frontRight.setTargetPosition(distance);
-        backLeft.setTargetPosition(distance);
-        backRight.setTargetPosition(distance);
+        robot.frontLeft.setTargetPosition(distance);
+        robot.frontRight.setTargetPosition(distance);
+        robot.backLeft.setTargetPosition(distance);
+        robot.backRight.setTargetPosition(distance);
 
         DriveForward(power);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
