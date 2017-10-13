@@ -190,8 +190,8 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveBackwardDistance(0.4, 5*rev);
-            DriveForwardDistance(0.4, 5*rev);
+            DriveBackwardDistance(0.4, 5);
+            DriveForwardDistance(0.4, 5);
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
