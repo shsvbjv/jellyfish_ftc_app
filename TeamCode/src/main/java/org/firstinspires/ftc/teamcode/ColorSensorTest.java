@@ -61,6 +61,7 @@ public class ColorSensorTest extends LinearOpMode {
             {
                 blue++;
             }
+            sleep(100);
         }
 
         if (red < blue) {
