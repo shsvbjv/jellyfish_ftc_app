@@ -37,8 +37,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
-
-    hMap robot = new hMap();
+    private DcMotor frontLeft;
+    private DcMotor backLeft;
+    private DcMotor frontRight;
+    private DcMotor backRight;
+    private Servo servo1;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -52,8 +55,22 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
+        //initialize motors and servos
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight = hardwareMap.dcMotor.get("frontRight");
+        backLeft = hardwareMap.dcMotor.get("backLeft");
+        backRight = hardwareMap.dcMotor.get("backRight");
 
+        servo1 = hardwareMap.servo.get("servo");
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        //initialize encoders
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int rev = 1120; //one revolution
 
         //color sensor
@@ -173,7 +190,15 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            DriveForwardDistance(0.2, 1*rev);
+            VerticalDriveDistance(0.4, 1*rev);
+            HorizontalStratffingDistance(-0.4,2*rev);
+            HorizontalStratffingDistance(0.4, 1*rev);
+            HorizontalStratffingDistance(0.4, 5*rev);
+
+
+
+
+
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -190,14 +215,15 @@ public class Auto extends LinearOpMode {
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     public void StopDriving() {
-        robot.frontLeft.setPower(0);
-        robot.frontRight.setPower(0);
-        robot.backLeft.setPower(0);
-        robot.backRight.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 
     //distance=rate*duration duration=distance/rate
-    public void DriveForward(double power) {
+    //power drives forward, -power drives backward
+    public void VerticalDrive(double power) {
        /* double leftSpeed;
         double rightSpeed;
 
@@ -229,66 +255,83 @@ public class Auto extends LinearOpMode {
         StopDriving();
         waitOneFullHardwareCycle();
         */
-        robot.frontLeft.setPower(power);
-        robot.frontRight.setPower(power);
-        robot.backLeft.setPower(power);
-        robot.backRight.setPower(power);
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
 
 
     }
-
-    public void TurnLeft(double power) {
-        robot.frontLeft.setPower(-power);
-        robot.frontRight.setPower(power);
-        robot.backLeft.setPower(-power);
-        robot.backRight.setPower(power);
-
-    }
-
-    public void TurnRight(double power) {
-        TurnLeft(-power);
-
-    }
-
-    public void DriveBackward(double power) {
-        DriveForward(-power);
+    //power drives right, -power drives left
+    public void HorizontalStraffing(double power){
+        frontLeft.setPower(power);
+        frontRight.setPower(-power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
-    public void DriveForwardDistance(double power, int distance) throws InterruptedException {
+    public void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
 
-        robot.frontLeft.setTargetPosition(distance);
-        robot.frontRight.setTargetPosition(distance);
-        robot.backLeft.setTargetPosition(distance);
-        robot.backRight.setTargetPosition(distance);
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
 
-        DriveForward(power);
+        VerticalDrive(power);
 
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
-    public void DriveBackwardDistance(double power, int distance) throws InterruptedException {
-        DriveForwardDistance(-power, distance);
+    public void HorizontalStratffingDistance(double power, int distance) throws InterruptedException {
+        //reset encoders
+        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        frontLeft.setTargetPosition(distance);
+        frontRight.setTargetPosition(distance);
+        backLeft.setTargetPosition(distance);
+        backRight.setTargetPosition(distance);
+
+        HorizontalStraffing(power);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        StopDriving();
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
