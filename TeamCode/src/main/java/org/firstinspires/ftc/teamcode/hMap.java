@@ -78,7 +78,7 @@ public class hMap {
         /* Servos */
         topServL    = hwMap.get(Servo.class, "topServL")        ;
         topServR    = hwMap.get(Servo.class, "topServR")        ;
-        botServL    = hwMap.get(Servo.class, "topServL")        ;
+        botServL    = hwMap.get(Servo.class, "botServL")        ;
         topServR    = hwMap.get(Servo.class, "botServR")        ;
         armServo    = hwMap.get(Servo.class, "armServo")        ;
 

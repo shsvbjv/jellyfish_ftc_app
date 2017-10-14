@@ -104,15 +104,15 @@ public class Arcade extends LinearOpMode {
 
         if (!robot.tChop) {
             if (gamepad2.right_bumper) {
-                robot.topServL.setPosition(robot.START_CHOP_POS_B);
-                robot.topServR.setPosition(robot.START_CHOP_POS_A);
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
                 sleep(300);
             }
         } else {
             if (gamepad2.right_bumper) {
-                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
-                robot.topServL.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.topServL.setPosition(robot.START_CHOP_POS_B);
+                robot.topServL.setPosition(robot.START_CHOP_POS_A);
                 robot.tChop = false;
                 sleep(300);
             }
