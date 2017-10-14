@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Scanner;
+
 /**
  * Created by KyleP on 10/8/2017.
  */
@@ -14,6 +16,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class ColorSensorTest extends LinearOpMode {
 
     ColorSensor color_sensor;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
