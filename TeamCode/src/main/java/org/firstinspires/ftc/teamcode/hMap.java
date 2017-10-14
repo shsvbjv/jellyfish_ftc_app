@@ -79,7 +79,7 @@ public class hMap {
         topServL    = hwMap.get(Servo.class, "topServL")        ;
         topServR    = hwMap.get(Servo.class, "topServR")        ;
         botServL    = hwMap.get(Servo.class, "botServL")        ;
-        topServR    = hwMap.get(Servo.class, "botServR")        ;
+        botServR    = hwMap.get(Servo.class, "botServR")        ;
         armServo    = hwMap.get(Servo.class, "armServo")        ;
 
         botServL.setPosition(START_CHOP_POS_A);
