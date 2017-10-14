@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Manual with Arcade Drive
  */
-
+    
 @TeleOp(name = "Winch Tester")
 public class WinchTest extends LinearOpMode {
 
