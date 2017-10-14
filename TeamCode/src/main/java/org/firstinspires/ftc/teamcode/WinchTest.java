@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "Winch Tester")
 public class WinchTest extends LinearOpMode {
 
-    HMap robot = new HMap();
+    hMap robot = new hMap();
 
     @Override
     public void runOpMode() throws InterruptedException {
