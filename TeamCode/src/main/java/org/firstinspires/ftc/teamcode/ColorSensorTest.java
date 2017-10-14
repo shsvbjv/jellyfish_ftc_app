@@ -28,6 +28,7 @@ public class ColorSensorTest extends LinearOpMode {
 
         while(opModeIsActive()) {
             isJewelRedFinal();
+            waitOneFullHardwareCycle();
         }
 
     }
