@@ -11,49 +11,23 @@ import com.qualcomm.robotcore.util.Range;
  * Manual with Arcade Drive
  */
 
-@TeleOp(name = "Arcade")
-public class Arcade extends LinearOpMode {
+@TeleOp(name = "Winch Tester")
+public class WinchTest extends LinearOpMode {
 
-    hMap robot = new hMap();
+    HMap robot = new HMap();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
 
-        double power = 0;
-        double strafe = 0;
-        double turn = 0;
-        double FL, FR, BL, BR;
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            //Winch();
-            power = scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
-            strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
-            turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
+            Winch();
 
-            FL = power - turn - strafe;
-            BL = power - turn + strafe;
-            FR = power + turn + strafe;
-            BR = power + turn - strafe;
+            //servo();
 
-            if(gamepad1.left_bumper) {
-                FL /= 3;
-                BL /= 3;
-                FR /= 3;
-                BR /= 3;
-            }
-
-            robot.frontLeft.setPower(FL);
-            robot.backLeft.setPower(BL);
-            robot.frontRight.setPower(FR);
-            robot.backRight.setPower(BR);
-
-            telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
-            telemetry.addData("Slow", gamepad1.left_bumper);
-            telemetry.update();
         }
     }
 
@@ -80,23 +54,24 @@ public class Arcade extends LinearOpMode {
     }
 
 
-    /*void Winch(){
-        robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
-        robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
+    void Winch(){
+        robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
     }
 
+    /*
     void servo() {
         if (!robot.bChop) {
             if (gamepad2.left_bumper) {
-                robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
-                robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.botServL.setPosition(0);
+                robot.botServR.setPosition(1);
                 robot.bChop = true;
                 sleep(300);
             }
         } else {
             if (gamepad2.left_bumper) {
-                robot.botServL.setPosition(robot.START_CHOP_POS_A);
-                robot.botServR.setPosition(robot.START_CHOP_POS_B);
+                robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.bChop = false;
                 sleep(300);
             }
@@ -104,8 +79,8 @@ public class Arcade extends LinearOpMode {
 
         if (!robot.tChop) {
             if (gamepad2.right_bumper) {
-                robot.topServL.setPosition(robot.START_CHOP_POS_B);
-                robot.topServR.setPosition(robot.START_CHOP_POS_A);
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
                 sleep(300);
             }
@@ -117,7 +92,16 @@ public class Arcade extends LinearOpMode {
                 sleep(300);
             }
         }
-    }*/
+
+        telemetry.addData("BL", robot.botServL.getPosition());
+        telemetry.addData("BR", robot.botServR.getPosition());
+        telemetry.addData("TL", robot.topServL.getPosition());
+        telemetry.addData("TR", robot.topServR.getPosition());
+        telemetry.update();
+
+    }
+*/
+
 }
 
 

@@ -30,7 +30,7 @@ public class hMap {
     public Servo    botServR    ;
 
     //Sensor Arm Servo
-    //public Servo    armServo    ;
+    public Servo    armServo    ;
 
     //Values for the chopsticks and tail
     public static final double START_TAIL_POS    = 0.8;
@@ -41,7 +41,7 @@ public class hMap {
     public static final double GRAB_CHOP_POS_B   = 0.6;
 
     //boolean for servo function
-    public boolean tail;
+    public boolean tail ;
     public boolean tChop;
     public boolean bChop;
 
@@ -80,7 +80,7 @@ public class hMap {
         topServR    = hwMap.get(Servo.class, "topServR")        ;
         botServL    = hwMap.get(Servo.class, "topServL")        ;
         topServR    = hwMap.get(Servo.class, "botServR")        ;
-        //armServo    = hwMap.get(Servo.class, "armServo")        ;
+        armServo    = hwMap.get(Servo.class, "armServo")        ;
 
         botServL.setPosition(START_CHOP_POS_A);
         botServR.setPosition(START_CHOP_POS_B);
