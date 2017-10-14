@@ -113,7 +113,7 @@ public class Vuforia extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        /**
+        /*
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
@@ -131,7 +131,7 @@ public class Vuforia extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            /**
+            /*
              * See if any of the instances of {@link relicTemplate} are currently visible.
              * {@link RelicRecoveryVuMark} is an enum which can have the following values:
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
