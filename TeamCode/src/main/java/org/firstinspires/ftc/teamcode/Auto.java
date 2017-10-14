@@ -191,9 +191,13 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
             VerticalDriveDistance(0.4, 1*rev);
+            sleep(300);
             HorizontalStratffingDistance(-0.4,2*rev);
+            sleep(300);
             HorizontalStratffingDistance(0.4, 1*rev);
+            sleep(300);
             HorizontalStratffingDistance(0.4, 5*rev);
+            sleep(300);
 
 
 
