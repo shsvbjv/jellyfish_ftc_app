@@ -54,7 +54,6 @@ public class Auto extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-
         int rev = 1120; //one revolution
 
         //color sensor
@@ -70,9 +69,8 @@ public class Auto extends LinearOpMode {
         //sleep(1000);
         //mrGryo.calibrate();
         //while (mrGryo.isCalibrating()) {
-            //wait for calibrating to finish
+        //wait for calibrating to finish
         //}
-
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -176,26 +174,24 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
+            startBottom();
+            startTop();
+            sleep(300);
             VerticalDriveDistance(0.4, rev);
             sleep(300);
-            HorizontalStratffingDistance(-0.4,2*rev);
+            HorizontalStratffingDistance(-0.4, 2 * rev);
             sleep(300);
             HorizontalStratffingDistance(0.4, rev);
             sleep(300);
-            HorizontalStratffingDistance(0.4, 5*rev);
+            HorizontalStratffingDistance(0.4, 5 * rev);
             sleep(300);
-
-
-
-
 
 
             //     turnAbsolute(target);
             //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-                waitOneFullHardwareCycle();
-            }
+            waitOneFullHardwareCycle();
         }
-
+    }
 
 
     String format(OpenGLMatrix transformationMatrix) {
@@ -253,8 +249,9 @@ public class Auto extends LinearOpMode {
 
 
     }
+
     //power drives right, -power drives left
-    public void HorizontalStraffing(double power){
+    public void HorizontalStraffing(double power) {
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(-power);
         robot.backLeft.setPower(power);
@@ -324,7 +321,40 @@ public class Auto extends LinearOpMode {
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+
 //------------------------------------------------------------------------------------------------------------------------------
+    //Winching function
+
+    public void grabBottom() throws InterruptedException {
+        robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
+        robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
+        robot.bChop = true;
+        sleep(300);
+    }
+
+    public void startBottom() throws InterruptedException {
+        robot.botServL.setPosition(robot.START_CHOP_POS_A);
+        robot.botServR.setPosition(robot.START_CHOP_POS_B);
+        robot.bChop = false;
+        sleep(300);
+    }
+
+    public void grabTop() throws InterruptedException {
+        robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+        robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
+        robot.tChop = true;
+        sleep(300);
+    }
+
+    public void startTop() throws InterruptedException {
+        robot.topServL.setPosition(robot.START_CHOP_POS_B);
+        robot.topServL.setPosition(robot.START_CHOP_POS_A);
+        robot.tChop = false;
+        sleep(300);
+    }
+
+//------------------------------------------------------------------------------------------------------------------------------
+
     //Turning Function
 
     /*public void turn(int target) throws InterruptedException {
