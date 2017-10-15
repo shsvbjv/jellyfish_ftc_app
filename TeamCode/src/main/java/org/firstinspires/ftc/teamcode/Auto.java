@@ -198,6 +198,7 @@ public class Auto extends LinearOpMode {
             else{
                 telemetry.addData("The color of the jewel is ","blue");
             }
+            sleep(1000);
 
             VerticalDriveDistance(0.4, rev);
             sleep(300);
