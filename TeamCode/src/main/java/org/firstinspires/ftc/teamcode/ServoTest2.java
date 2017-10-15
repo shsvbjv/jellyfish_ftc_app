@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoTest2 extends LinearOpMode {
     private Servo botServL, botServR, topServL, topServR;
     boolean extendB, extendT;
-    double START_POSA = 0.0;
-    double START_POSB = 1;
+    double START_POSA = 0.1;
+    double START_POSB = 0.9;
     double GRAB_POSA = 0.4;
     double GRAB_POSB = 0.6;
 
@@ -27,9 +27,9 @@ public class ServoTest2 extends LinearOpMode {
         topServR = hardwareMap.servo.get("topServR");
 
         botServL.setPosition(START_POSA);
-        botServR.setPosition(START_POSB);
-        topServL.setPosition(START_POSA);
-        topServR.setPosition(START_POSB);
+        botServR.setPosition(START_POSB + 0.1);
+        topServL.setPosition(START_POSB - 0.1);
+        topServR.setPosition(START_POSA - 0.1);
         extendB = false;
         extendT = false;
 
@@ -38,15 +38,15 @@ public class ServoTest2 extends LinearOpMode {
         while (opModeIsActive()) {
             if (!extendB) {
                 if (gamepad1.left_bumper) {
-                    botServL.setPosition(0);
-                    botServR.setPosition(1);
+                    botServL.setPosition(GRAB_POSA + 0.1);
+                    botServR.setPosition(GRAB_POSB);
                     extendB = true;
                     sleep(300);
                 }
             } else {
                 if (gamepad1.left_bumper) {
-                    botServL.setPosition(GRAB_POSA);
-                    botServR.setPosition(GRAB_POSB);
+                    botServL.setPosition(START_POSA);
+                    botServR.setPosition(START_POSB + 0.1);
                     extendB = false;
                     sleep(300);
                 }
@@ -54,15 +54,15 @@ public class ServoTest2 extends LinearOpMode {
 
             if (!extendT) {
                 if (gamepad1.right_bumper) {
-                    topServL.setPosition(START_POSB);
-                    topServR.setPosition(START_POSA);
+                    topServL.setPosition(GRAB_POSB - 0.2);
+                    topServR.setPosition(GRAB_POSA);
                     extendT = true;
                     sleep(300);
                 }
             } else {
                 if (gamepad1.right_bumper) {
-                    topServL.setPosition(GRAB_POSB);
-                    topServR.setPosition(GRAB_POSA);
+                    topServL.setPosition(START_POSB - 0.1);
+                    topServR.setPosition(START_POSA - 0.1);
                     extendT = false;
                     sleep(300);
                 }
