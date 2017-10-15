@@ -37,46 +37,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
-    private DcMotor frontLeft;
-    private DcMotor backLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private Servo servo1;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
 
     VuforiaLocalizer vuforia;
 
-    ColorSensor color_sensor;
+    //ColorSensor color_sensor;
 
-
+    hMap robot = new hMap();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //initialize motors and servos
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
 
-        servo1 = hardwareMap.servo.get("servo");
+        robot.init(hardwareMap);
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        //initialize encoders
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         int rev = 1120; //one revolution
 
-        //initialize color sensor
-        color_sensor.enableLed(true);  // Turn the LED on
-        color_sensor = hardwareMap.colorSensor.get("color_sensor");
-
+        //color sensor
+        //color_sensor = hardwareMap.colorSensor.get("color");
 
         //initialize gryo
 
@@ -148,6 +130,8 @@ public class Auto extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
+            robot.init(hardwareMap);
+
             /*
              * See if any of the instances of {@link relicTemplate} are currently visible.
              * {@link RelicRecoveryVuMark} is an enum which can have the following values:
@@ -192,14 +176,6 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            if(isJewelRedFinal()){
-                telemetry.addData("The color of the jewel is ","red");
-            }
-            else{
-                telemetry.addData("The color of the jewel is ","blue");
-            }
-            sleep(1000);
-
             VerticalDriveDistance(0.4, rev);
             sleep(300);
             HorizontalStratffingDistance(-0.4,2*rev);
@@ -208,6 +184,8 @@ public class Auto extends LinearOpMode {
             sleep(300);
             HorizontalStratffingDistance(0.4, 5*rev);
             sleep(300);
+
+
 
 
 
@@ -227,10 +205,11 @@ public class Auto extends LinearOpMode {
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     public void StopDriving() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(0);
     }
 
     //distance=rate*duration duration=distance/rate
@@ -267,129 +246,85 @@ public class Auto extends LinearOpMode {
         StopDriving();
         waitOneFullHardwareCycle();
         */
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
+        robot.frontLeft.setPower(power);
+        robot.frontRight.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.backRight.setPower(power);
 
 
     }
     //power drives right, -power drives left
     public void HorizontalStraffing(double power){
-        frontLeft.setPower(power);
-        frontRight.setPower(-power);
-        backLeft.setPower(power);
-        backRight.setPower(-power);
+        robot.frontLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backLeft.setPower(power);
+        robot.backRight.setPower(-power);
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
     public void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
 
-        frontLeft.setTargetPosition(distance);
-        frontRight.setTargetPosition(distance);
-        backLeft.setTargetPosition(distance);
-        backRight.setTargetPosition(distance);
+        robot.frontLeft.setTargetPosition(distance);
+        robot.frontRight.setTargetPosition(distance);
+        robot.backLeft.setTargetPosition(distance);
+        robot.backRight.setTargetPosition(distance);
 
         VerticalDrive(power);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
     public void HorizontalStratffingDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
 
-        frontLeft.setTargetPosition(distance);
-        frontRight.setTargetPosition(distance);
-        backLeft.setTargetPosition(distance);
-        backRight.setTargetPosition(distance);
+        robot.frontLeft.setTargetPosition(distance);
+        robot.frontRight.setTargetPosition(distance);
+        robot.backLeft.setTargetPosition(distance);
+        robot.backRight.setTargetPosition(distance);
 
         HorizontalStraffing(power);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
-
-//------------------------------------------------------------------------------------------------------------------------------
-public boolean isJewelRed (){
-    telemetry.addData("blue value", color_sensor.blue());
-    telemetry.addData("red value", color_sensor.red());
-
-
-    if(color_sensor.red()>color_sensor.blue()){
-        telemetry.addData("The color is ", "red");
-        telemetry.update();
-        return true;
-    }
-    else{
-        telemetry.addData("The color is ", "blue");
-        telemetry.update();
-        return false;
-    }
-}
-
-    public boolean isJewelRedFinal() {
-        int red = 0;
-        int blue = 0;
-        Boolean isRed = null;
-
-        for (int i = 0; i < 20; i++) {
-            if (isJewelRed()) {
-                red++;
-            } else if (!isJewelRed()) ;
-            {
-                blue++;
-            }
-            sleep(100);
-        }
-
-        if (red < blue) {
-            isRed = false;
-        } else if (blue < red) {
-            isRed = true;
-        }
-
-        return isRed;
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 //------------------------------------------------------------------------------------------------------------------------------
-
     //Turning Function
 
     /*public void turn(int target) throws InterruptedException {
