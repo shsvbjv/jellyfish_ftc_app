@@ -176,6 +176,16 @@ public class Auto extends LinearOpMode {
             //turning and driving test
             startBottom();
             startTop();
+            sleep(1000);
+
+            if(isJewelRedFinal()){
+                telemetry.addData("The jewel is: ", "red");
+            }
+            else{
+                telemetry.addData("The jewel is: ", "blue");
+            }
+            sleep(1000);
+
             sleep(300);
             VerticalDriveDistance(0.4, rev);
             sleep(300);
@@ -323,7 +333,7 @@ public class Auto extends LinearOpMode {
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
-    //Winching function
+    //Winching functions
 
     public void grabBottom() throws InterruptedException {
         robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
@@ -354,7 +364,50 @@ public class Auto extends LinearOpMode {
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
+    //isJewelRed
+public boolean isJewelRed (){
+    telemetry.addData("blue value", robot.color_sensor.blue());
+    telemetry.addData("red value", robot.color_sensor.red());
 
+
+    if(robot.color_sensor.red()>robot.color_sensor.blue()){
+        telemetry.addData("The color is ", "red");
+        telemetry.update();
+        return true;
+    }
+    else{
+        telemetry.addData("The color is ", "blue");
+        telemetry.update();
+        return false;
+    }
+}
+
+    public boolean isJewelRedFinal() {
+        int red = 0;
+        int blue = 0;
+        Boolean isRed = null;
+
+        for (int i = 0; i < 20; i++) {
+            if (isJewelRed()) {
+                red++;
+            } else if (!isJewelRed()) ;
+            {
+                blue++;
+            }
+            sleep(100);
+        }
+
+        if (red < blue) {
+            isRed = false;
+        } else if (blue < red) {
+            isRed = true;
+        }
+
+        return isRed;
+
+    }
+
+//------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
 
     /*public void turn(int target) throws InterruptedException {
