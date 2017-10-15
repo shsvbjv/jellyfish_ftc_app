@@ -20,7 +20,7 @@ public class Arcade extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-        robot.color_sensor.enableLed(false);
+        //robot.color_sensor.enableLed(false);
 
         double power = 0;
         double strafe = 0;
@@ -32,6 +32,7 @@ public class Arcade extends LinearOpMode {
         while (opModeIsActive()) {
 
             Winch();
+            servo();
 
             power = scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
@@ -55,12 +56,16 @@ public class Arcade extends LinearOpMode {
             robot.backRight.setPower(BR);
 
             telemetry.addData("Motors", "FL (%.2f), FR (%.2f), BL (%.2f), BR (%.2f)", FL, FR, BL, BR);
+            telemetry.addData("Servos", "TL (%.2f), TR (%.2f), BL (%.2f), BR (%.2f)", robot.topServL.getPosition(), robot.topServR.getPosition(), robot.botServL.getPosition(), robot.botServR.getPosition());
             telemetry.addData("FL" , robot.frontLeft.getCurrentPosition());
             telemetry.addData("FR", robot.frontRight.getCurrentPosition());
             telemetry.addData("BL", robot.backLeft.getCurrentPosition());
             telemetry.addData("BR", robot.backRight.getCurrentPosition());
             telemetry.addData("Slow", gamepad1.left_bumper);
             telemetry.update();
+
+            robot.rWinch.setTargetPosition(robot.rWinch.getCurrentPosition());
+            robot.lWinch.setTargetPosition(robot.lWinch.getCurrentPosition());
         }
     }
 
@@ -88,14 +93,14 @@ public class Arcade extends LinearOpMode {
 
 
     void Winch(){
-        robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
-        robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
+        robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
+        robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
     }
 
     void servo() {
         if (!robot.bChop) {
             if (gamepad2.left_bumper) {
-                robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
+                robot.botServL.setPosition(robot.GRAB_CHOP_POS_A + 0.1);
                 robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.bChop = true;
                 sleep(300);
@@ -103,7 +108,7 @@ public class Arcade extends LinearOpMode {
         } else {
             if (gamepad2.left_bumper) {
                 robot.botServL.setPosition(robot.START_CHOP_POS_A);
-                robot.botServR.setPosition(robot.START_CHOP_POS_B);
+                robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
                 robot.bChop = false;
                 sleep(300);
             }
@@ -111,15 +116,15 @@ public class Arcade extends LinearOpMode {
 
         if (!robot.tChop) {
             if (gamepad2.right_bumper) {
-                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+                robot.topServL.setPosition(robot.GRAB_CHOP_POS_B - 0.2);
                 robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
                 sleep(300);
             }
         } else {
             if (gamepad2.right_bumper) {
-                robot.topServL.setPosition(robot.START_CHOP_POS_B);
-                robot.topServL.setPosition(robot.START_CHOP_POS_A);
+                robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
+                robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
                 robot.tChop = false;
                 sleep(300);
             }

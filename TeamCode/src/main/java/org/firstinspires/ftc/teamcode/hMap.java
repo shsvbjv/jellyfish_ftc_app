@@ -34,13 +34,13 @@ public class hMap {
     public Servo       armServo    ;
 
     /* Sensors */
-    public ColorSensor color_sensor;
+    //public ColorSensor color_sensor;
 
     //Values for the chopsticks and tail
     public static final double START_TAIL_POS    = 0.8;
     public static final double GRAB_TAIL_POS     = 0.3;
-    public static final double START_CHOP_POS_A  = 0.0;
-    public static final double START_CHOP_POS_B  = 1.0;
+    public static final double START_CHOP_POS_A  = 0.1;
+    public static final double START_CHOP_POS_B  = 0.9;
     public static final double GRAB_CHOP_POS_A   = 0.4;
     public static final double GRAB_CHOP_POS_B   = 0.6;
 
@@ -71,6 +71,11 @@ public class hMap {
         frontRight.setDirection(DcMotor.Direction.REVERSE)            ;
         backRight.setDirection(DcMotor.Direction.REVERSE)             ;
 
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -79,6 +84,11 @@ public class hMap {
         //Winch
         lWinch          = hwMap.get(DcMotor.class, "lWinch")          ;
         rWinch          = hwMap.get(DcMotor.class, "rWinch")          ;
+
+        lWinch.setDirection(DcMotor.Direction.REVERSE);
+
+        lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         lWinch.setPower(0);
         rWinch.setPower(0);
@@ -91,13 +101,13 @@ public class hMap {
         armServo        = hwMap.get(Servo.class, "armServo")          ;
 
         /* Sensors */
-        color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
+        //color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
 
-        color_sensor.enableLed(true);
+        //color_sensor.enableLed(true);
 
         botServL.setPosition(START_CHOP_POS_A);
-        botServR.setPosition(START_CHOP_POS_B);
-        topServL.setPosition(START_CHOP_POS_B);
-        topServR.setPosition(START_CHOP_POS_A);
+        botServR.setPosition(START_CHOP_POS_B + 0.1);
+        topServL.setPosition(START_CHOP_POS_B - 0.1);
+        topServR.setPosition(START_CHOP_POS_A - 0.1);
     }
 }

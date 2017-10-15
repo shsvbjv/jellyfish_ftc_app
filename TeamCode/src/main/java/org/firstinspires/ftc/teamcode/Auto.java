@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -129,6 +130,11 @@ public class Auto extends LinearOpMode {
         while (opModeIsActive()) {
 
             robot.init(hardwareMap);
+
+            robot.backLeft.setDirection(DcMotor.Direction.REVERSE);
+            robot.frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            robot.backRight.setDirection(DcMotor.Direction.FORWARD);
+            robot.frontRight.setDirection(DcMotor.Direction.FORWARD);
 
             /*
              * See if any of the instances of {@link relicTemplate} are currently visible.
