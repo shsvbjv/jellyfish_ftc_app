@@ -29,14 +29,14 @@ public class JarmTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         armServo        = hardwareMap.servo.get("armServo");
 
-        armServo.setPosition(0.5);
+        armServo.setPosition(0.4);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            armServo.setPosition(-0.3);
+            armServo.setPosition(0.4);
             sleep(2000);
-            armServo.setPosition(0.3);
+            armServo.setPosition(-0.2);
             sleep(2000);
         }
 
