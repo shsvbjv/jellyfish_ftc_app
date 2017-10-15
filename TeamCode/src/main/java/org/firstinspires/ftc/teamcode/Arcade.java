@@ -31,7 +31,8 @@ public class Arcade extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //Winch();
+            Winch();
+
             power = scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
             strafe = scaleInput(Range.clip(-gamepad1.right_stick_x, -1, 1));
             turn = scaleInput(Range.clip(-gamepad1.left_stick_x, -1, 1));
