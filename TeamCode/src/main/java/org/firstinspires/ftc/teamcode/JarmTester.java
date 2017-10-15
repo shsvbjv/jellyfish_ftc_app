@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,7 +19,7 @@ import java.util.Scanner;
  * Created by KyleP on 10/14/2017.
  */
 
-@TeleOp(name = "ColorSensorTest")
+@Autonomous(name = "ColorSensorTest")
 
 public class JarmTester extends LinearOpMode {
     hMap robot = new hMap();
