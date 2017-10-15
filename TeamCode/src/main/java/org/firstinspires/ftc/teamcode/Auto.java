@@ -177,13 +177,14 @@ public class Auto extends LinearOpMode {
             startBottom();
             startTop();
             sleep(1000);
-
+            /*
             if(isJewelRedFinal()){
                 telemetry.addData("The jewel is: ", "red");
             }
             else{
                 telemetry.addData("The jewel is: ", "blue");
             }
+            */
             sleep(1000);
 
             sleep(300);
@@ -365,6 +366,7 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
+    /*
 public boolean isJewelRed (){
     telemetry.addData("blue value", robot.color_sensor.blue());
     telemetry.addData("red value", robot.color_sensor.red());
@@ -406,6 +408,7 @@ public boolean isJewelRed (){
         return isRed;
 
     }
+    */
 
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function
