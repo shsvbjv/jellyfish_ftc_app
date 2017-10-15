@@ -48,7 +48,7 @@ public class Auto extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
 
-    //ColorSensor color_sensor;
+    ColorSensor color_sensor;
 
 
 
@@ -73,8 +73,10 @@ public class Auto extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int rev = 1120; //one revolution
 
-        //color sensor
-        //color_sensor = hardwareMap.colorSensor.get("color");
+        //initialize color sensor
+        color_sensor.enableLed(true);  // Turn the LED on
+        color_sensor = hardwareMap.colorSensor.get("color_sensor");
+
 
         //initialize gryo
 
@@ -198,8 +200,6 @@ public class Auto extends LinearOpMode {
             sleep(300);
             HorizontalStratffingDistance(0.4, 5*rev);
             sleep(300);
-
-
 
 
 
@@ -337,7 +337,51 @@ public class Auto extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+
 //------------------------------------------------------------------------------------------------------------------------------
+public boolean isJewelRed (){
+    telemetry.addData("blue value", color_sensor.blue());
+    telemetry.addData("red value", color_sensor.red());
+
+
+    if(color_sensor.red()>color_sensor.blue()){
+        telemetry.addData("The color is ", "red");
+        telemetry.update();
+        return true;
+    }
+    else{
+        telemetry.addData("The color is ", "blue");
+        telemetry.update();
+        return false;
+    }
+}
+
+    public boolean isJewelRedFinal() {
+        int red = 0;
+        int blue = 0;
+        Boolean isRed = null;
+
+        for (int i = 0; i < 20; i++) {
+            if (isJewelRed()) {
+                red++;
+            } else if (!isJewelRed()) ;
+            {
+                blue++;
+            }
+            sleep(100);
+        }
+
+        if (red < blue) {
+            isRed = false;
+        } else if (blue < red) {
+            isRed = true;
+        }
+
+        return isRed;
+
+    }
+//------------------------------------------------------------------------------------------------------------------------------
+
     //Turning Function
 
     /*public void turn(int target) throws InterruptedException {
