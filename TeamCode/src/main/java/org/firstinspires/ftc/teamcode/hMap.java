@@ -60,8 +60,8 @@ public class hMap {
         backLeft    = hwMap.get(DcMotor.class, "backLeft")      ;
         backRight   = hwMap.get(DcMotor.class, "backRight")     ;
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE)       ;
-        backLeft.setDirection(DcMotor.Direction.REVERSE)        ;
+        frontRight.setDirection(DcMotor.Direction.REVERSE)       ;
+        backRight.setDirection(DcMotor.Direction.REVERSE)        ;
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
