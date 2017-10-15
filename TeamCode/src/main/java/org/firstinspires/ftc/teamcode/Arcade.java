@@ -80,7 +80,7 @@ public class Arcade extends LinearOpMode {
     }
 
 
-    /*void Winch(){
+    void Winch(){
         robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
         robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y / 2));
     }
@@ -117,7 +117,7 @@ public class Arcade extends LinearOpMode {
                 sleep(300);
             }
         }
-    }*/
+    }
 }
 
 
