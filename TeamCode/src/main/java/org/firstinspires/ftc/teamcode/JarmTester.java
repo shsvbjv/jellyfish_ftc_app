@@ -16,7 +16,7 @@ import com.vuforia.TextTracker;
 import java.util.Scanner;
 
 /**
- * Created by KyleP on 10/14/2017.
+ * Created by KyleP on 10/14/2017
  */
 
 @Autonomous(name = "Jarm Tester")
@@ -36,7 +36,7 @@ public class JarmTester extends LinearOpMode {
         while (opModeIsActive()) {
             armServo.setPosition(0.4);
             sleep(2000);
-            armServo.setPosition(-0.2);
+            armServo.setPosition(0.1);
             sleep(2000);
         }
 
