@@ -30,7 +30,7 @@ public class hMap {
     public Servo       botServL    ;
     public Servo       botServR    ;
 
-    //Sensor Arm Servo
+    //Sensor Arm Servo, for jarm
     public Servo       armServo    ;
 
     /* Sensors */

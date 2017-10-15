@@ -22,20 +22,21 @@ import java.util.Scanner;
 @Autonomous(name = "Jarm Tester")
 
 public class JarmTester extends LinearOpMode {
-    hMap robot = new hMap();
+
+    public Servo armServo;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
+        armServo        = hardwareMap.servo.get("armServo");
 
-        robot.armServo.setPosition(robot.UP_JARM_POS);
+        armServo.setPosition(0.5);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            robot.armServo.setPosition(robot.DOWN_JARM_POS);
+            armServo.setPosition(0);
             sleep(500);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
+            armServo.setPosition(0.5);
             sleep(500);
         }
 
