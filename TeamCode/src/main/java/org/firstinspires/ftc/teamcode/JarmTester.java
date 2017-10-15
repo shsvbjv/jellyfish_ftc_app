@@ -16,7 +16,7 @@ import com.vuforia.TextTracker;
 import java.util.Scanner;
 
 /**
- * Created by KyleP on 10/14/2017.
+ * Created by KyleP on 10/14/2017
  */
 
 @Autonomous(name = "Jarm Tester")
