@@ -34,9 +34,9 @@ public class JarmTester extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            armServo.setPosition(0);
+            armServo.setPosition(-0.1);
             sleep(2000);
-            armServo.setPosition(0.5);
+            armServo.setPosition(0.4);
             sleep(2000);
         }
 
