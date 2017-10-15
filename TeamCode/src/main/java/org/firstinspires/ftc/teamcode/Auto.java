@@ -192,6 +192,13 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
+            if(isJewelRedFinal()){
+                telemetry.addData("The color of the jewel is ","red");
+            }
+            else{
+                telemetry.addData("The color of the jewel is ","blue");
+            }
+
             VerticalDriveDistance(0.4, rev);
             sleep(300);
             HorizontalStratffingDistance(-0.4,2*rev);
