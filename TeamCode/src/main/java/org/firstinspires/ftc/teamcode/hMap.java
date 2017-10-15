@@ -60,8 +60,8 @@ public class hMap {
         backLeft    = hwMap.get(DcMotor.class, "backLeft")      ;
         backRight   = hwMap.get(DcMotor.class, "backRight")     ;
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE)       ;
-        backLeft.setDirection(DcMotor.Direction.REVERSE)        ;
+        frontRight.setDirection(DcMotor.Direction.REVERSE)       ;
+        backRight.setDirection(DcMotor.Direction.REVERSE)        ;
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -79,7 +79,7 @@ public class hMap {
         topServL    = hwMap.get(Servo.class, "topServL")        ;
         topServR    = hwMap.get(Servo.class, "topServR")        ;
         botServL    = hwMap.get(Servo.class, "botServL")        ;
-        topServR    = hwMap.get(Servo.class, "botServR")        ;
+        botServR    = hwMap.get(Servo.class, "botServR")        ;
         armServo    = hwMap.get(Servo.class, "armServo")        ;
 
         botServL.setPosition(START_CHOP_POS_A);
