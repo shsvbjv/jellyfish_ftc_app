@@ -45,8 +45,8 @@ public class hMap {
     public static final double GRAB_CHOP_POS_B   = 0.6;
 
     //Start and end positions for the jarm
-    public static final double START_JARM_POS = 0.5;
-    public static final double END_JARM_POS = 0.0;
+    public static final double UP_JARM_POS = 0.5;
+    public static final double DOWN_JARM_POS = 0.0;
 
     //boolean for servo function
     public boolean tail ;
