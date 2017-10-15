@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,25 +13,28 @@ public class hMap {
     /* Motors */
 
     //Wheels
-    public DcMotor  frontLeft   ;
-    public DcMotor  frontRight  ;
-    public DcMotor  backLeft    ;
-    public DcMotor  backRight   ;
+    public DcMotor     frontLeft   ;
+    public DcMotor     frontRight  ;
+    public DcMotor     backLeft    ;
+    public DcMotor     backRight   ;
 
     //Winch
-    public DcMotor  lWinch      ;
-    public DcMotor  rWinch      ;
+    public DcMotor     lWinch      ;
+    public DcMotor     rWinch      ;
 
     /* Servos */
 
     //Chopstick Servos
-    public Servo    topServL    ;
-    public Servo    topServR    ;
-    public Servo    botServL    ;
-    public Servo    botServR    ;
+    public Servo       topServL    ;
+    public Servo       topServR    ;
+    public Servo       botServL    ;
+    public Servo       botServR    ;
 
     //Sensor Arm Servo
-    public Servo    armServo    ;
+    public Servo       armServo    ;
+
+    /* Sensors */
+    public ColorSensor color_sensor;
 
     //Values for the chopsticks and tail
     public static final double START_TAIL_POS    = 0.8;
@@ -55,13 +59,13 @@ public class hMap {
         /* Motors */
 
         //Wheels
-        frontLeft   = hwMap.get(DcMotor.class, "frontLeft")     ;
-        frontRight  = hwMap.get(DcMotor.class, "frontRight")    ;
-        backLeft    = hwMap.get(DcMotor.class, "backLeft")      ;
-        backRight   = hwMap.get(DcMotor.class, "backRight")     ;
+        frontLeft       = hwMap.get(DcMotor.class, "frontLeft")       ;
+        frontRight      = hwMap.get(DcMotor.class, "frontRight")      ;
+        backLeft        = hwMap.get(DcMotor.class, "backLeft")        ;
+        backRight       = hwMap.get(DcMotor.class, "backRight")       ;
 
-        frontRight.setDirection(DcMotor.Direction.REVERSE)       ;
-        backRight.setDirection(DcMotor.Direction.REVERSE)        ;
+        frontRight.setDirection(DcMotor.Direction.REVERSE)            ;
+        backRight.setDirection(DcMotor.Direction.REVERSE)             ;
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -69,18 +73,23 @@ public class hMap {
         backRight.setPower(0);
 
         //Winch
-        lWinch      = hwMap.get(DcMotor.class, "lWinch")        ;
-        rWinch      = hwMap.get(DcMotor.class, "rWinch")        ;
+        lWinch          = hwMap.get(DcMotor.class, "lWinch")          ;
+        rWinch          = hwMap.get(DcMotor.class, "rWinch")          ;
 
         lWinch.setPower(0);
         rWinch.setPower(0);
 
         /* Servos */
-        topServL    = hwMap.get(Servo.class, "topServL")        ;
-        topServR    = hwMap.get(Servo.class, "topServR")        ;
-        botServL    = hwMap.get(Servo.class, "botServL")        ;
-        botServR    = hwMap.get(Servo.class, "botServR")        ;
-        armServo    = hwMap.get(Servo.class, "armServo")        ;
+        topServL        = hwMap.get(Servo.class, "topServL")          ;
+        topServR        = hwMap.get(Servo.class, "topServR")          ;
+        botServL        = hwMap.get(Servo.class, "botServL")          ;
+        botServR        = hwMap.get(Servo.class, "botServR")          ;
+        armServo        = hwMap.get(Servo.class, "armServo")          ;
+
+        /* Sensors */
+        color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
+
+        color_sensor.enableLed(true);
 
         botServL.setPosition(START_CHOP_POS_A);
         botServR.setPosition(START_CHOP_POS_B);

@@ -20,6 +20,8 @@ public class Arcade extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
+        robot.color_sensor.enableLed(false);
+
         double power = 0;
         double strafe = 0;
         double turn = 0;
