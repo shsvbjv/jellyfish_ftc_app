@@ -19,7 +19,7 @@ import java.util.Scanner;
  * Created by KyleP on 10/14/2017.
  */
 
-@Autonomous(name = "ColorSensorTest")
+@Autonomous(name = "Jarm Tester")
 
 public class JarmTester extends LinearOpMode {
     hMap robot = new hMap();
