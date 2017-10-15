@@ -71,6 +71,11 @@ public class hMap {
         frontRight.setDirection(DcMotor.Direction.REVERSE)            ;
         backRight.setDirection(DcMotor.Direction.REVERSE)             ;
 
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -81,6 +86,9 @@ public class hMap {
         rWinch          = hwMap.get(DcMotor.class, "rWinch")          ;
 
         lWinch.setDirection(DcMotor.Direction.REVERSE);
+
+        lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         lWinch.setPower(0);
         rWinch.setPower(0);
