@@ -55,7 +55,7 @@ public class Auto extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-        int rev = 1120; //one revolution
+        int rev = 1; //one revolution
 
         //color sensor
         //color_sensor = hardwareMap.colorSensor.get("color");
