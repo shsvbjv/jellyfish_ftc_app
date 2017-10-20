@@ -71,10 +71,10 @@ public class hMap {
         frontRight.setDirection(DcMotor.Direction.REVERSE)            ;
         backRight.setDirection(DcMotor.Direction.REVERSE)             ;
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -87,8 +87,8 @@ public class hMap {
 
         lWinch.setDirection(DcMotor.Direction.REVERSE);
 
-        lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         lWinch.setPower(0);
         rWinch.setPower(0);
@@ -104,10 +104,5 @@ public class hMap {
         //color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
 
         //color_sensor.enableLed(true);
-
-        botServL.setPosition(START_CHOP_POS_A);
-        botServR.setPosition(START_CHOP_POS_B + 0.1);
-        topServL.setPosition(START_CHOP_POS_B - 0.1);
-        topServR.setPosition(START_CHOP_POS_A - 0.1);
     }
 }
