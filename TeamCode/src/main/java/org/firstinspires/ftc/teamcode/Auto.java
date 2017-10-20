@@ -185,9 +185,6 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
-            startBottom();
-            startTop();
-            sleep(1000);
             /*
             if(isJewelRedFinal()){
                 telemetry.addData("The jewel is: ", "red");
