@@ -55,7 +55,7 @@ public class Auto extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-        int rev = 1120; //one revolution
+        int rev = 1; //one revolution
 
         //color sensor
         //color_sensor = hardwareMap.colorSensor.get("color");
@@ -128,6 +128,7 @@ public class Auto extends LinearOpMode {
         //start Autonomous
         waitForStart();
         while (opModeIsActive()) {
+            /*
 
             robot.init(hardwareMap);
 
@@ -135,6 +136,7 @@ public class Auto extends LinearOpMode {
             robot.frontLeft.setDirection(DcMotor.Direction.REVERSE);
             robot.backRight.setDirection(DcMotor.Direction.FORWARD);
             robot.frontRight.setDirection(DcMotor.Direction.FORWARD);
+            */
 
             /*
              * See if any of the instances of {@link relicTemplate} are currently visible.
@@ -142,28 +144,29 @@ public class Auto extends LinearOpMode {
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+           // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+              //  telemetry.addData("VuMark", "%s visible", vuMark);
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
+              //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+              //  telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
-                if (pose != null) {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+               // if (pose != null) {
+                  //  VectorF trans = pose.getTranslation();
+                  //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
                     // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    double tX = trans.get(0);
+                  /*  double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
@@ -177,6 +180,8 @@ public class Auto extends LinearOpMode {
             }
 
             telemetry.update();
+            */
+
 
 //------------------------------------------------------------------------------------------------------------------------------
             //turning and driving test
@@ -193,8 +198,19 @@ public class Auto extends LinearOpMode {
             */
             sleep(1000);
 
-            sleep(300);
+            //forwards
             VerticalDriveDistance(0.4, rev);
+            sleep(300);
+            //right
+            HorizontalStratffingDistance(0.4, rev);
+            sleep(300);
+            //backwards
+            VerticalDriveDistance(-0.4, rev);
+            sleep(300);
+            //left
+            HorizontalStratffingDistance(-0.4, rev);
+            sleep(300);
+            /*VerticalDriveDistance(0.4, rev);
             sleep(300);
             HorizontalStratffingDistance(-0.4, 2 * rev);
             sleep(300);
@@ -202,6 +218,7 @@ public class Auto extends LinearOpMode {
             sleep(300);
             HorizontalStratffingDistance(0.4, 5 * rev);
             sleep(300);
+            */
 
 
             //     turnAbsolute(target);
