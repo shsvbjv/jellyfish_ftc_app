@@ -382,7 +382,7 @@ public class Auto extends LinearOpMode {
 
     public void startTop() throws InterruptedException {
         robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
-        robot.topServL.setPosition(robot.START_CHOP_POS_A - 0.1);
+        robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
         robot.tChop = false;
         sleep(300);
     }
