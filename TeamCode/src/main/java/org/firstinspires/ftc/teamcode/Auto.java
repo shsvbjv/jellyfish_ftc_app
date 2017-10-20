@@ -360,7 +360,7 @@ public class Auto extends LinearOpMode {
     //Winching functions
 
     public void grabBottom() throws InterruptedException {
-        robot.botServL.setPosition(robot.GRAB_CHOP_POS_A);
+        robot.botServL.setPosition(robot.GRAB_CHOP_POS_A + 0.1);
         robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
         robot.bChop = true;
         sleep(300);
@@ -368,21 +368,21 @@ public class Auto extends LinearOpMode {
 
     public void startBottom() throws InterruptedException {
         robot.botServL.setPosition(robot.START_CHOP_POS_A);
-        robot.botServR.setPosition(robot.START_CHOP_POS_B);
+        robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
         robot.bChop = false;
         sleep(300);
     }
 
     public void grabTop() throws InterruptedException {
-        robot.topServL.setPosition(robot.GRAB_CHOP_POS_B);
+        robot.topServL.setPosition(robot.GRAB_CHOP_POS_B - 0.2);
         robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
         robot.tChop = true;
         sleep(300);
     }
 
     public void startTop() throws InterruptedException {
-        robot.topServL.setPosition(robot.START_CHOP_POS_B);
-        robot.topServL.setPosition(robot.START_CHOP_POS_A);
+        robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
+        robot.topServL.setPosition(robot.START_CHOP_POS_A - 0.1);
         robot.tChop = false;
         sleep(300);
     }
