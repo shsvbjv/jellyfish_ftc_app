@@ -382,7 +382,7 @@ public class AutoBlue extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    public boolean isJewelRed() {
+    /*public boolean isJewelRed() {
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
 
@@ -420,6 +420,7 @@ public class AutoBlue extends LinearOpMode {
         return isRed;
 
     }
+    */
 
 
 //------------------------------------------------------------------------------------------------------------------------------
