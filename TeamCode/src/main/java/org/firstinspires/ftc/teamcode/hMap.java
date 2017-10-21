@@ -30,11 +30,11 @@ public class hMap {
     public Servo       botServL    ;
     public Servo       botServR    ;
 
-    //Sensor Arm Servo, for jarm
+    //Sensor Arm Servo, for jewel arm
     public Servo       armServo    ;
 
     /* Sensors */
-    //public ColorSensor color_sensor;
+    public ColorSensor color_sensor;
 
     //Values for the chopsticks and tail
     public static final double START_TAIL_POS    = 0.8;
@@ -44,7 +44,7 @@ public class hMap {
     public static final double GRAB_CHOP_POS_A   = 0.4;
     public static final double GRAB_CHOP_POS_B   = 0.6;
 
-    //Start and end positions for the jarm
+    //Start and end positions for the jewel arm
     public static final double UP_JARM_POS = 0.5;
     public static final double DOWN_JARM_POS = 0.0;
 
@@ -69,7 +69,7 @@ public class hMap {
         backRight       = hwMap.get(DcMotor.class, "backRight")       ;
 
         frontRight.setDirection(DcMotor.Direction.REVERSE)            ;
-        backRight.setDirection(DcMotor.Direction.REVERSE)             ;
+        backRight .setDirection(DcMotor.Direction.REVERSE)            ;
 
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -101,8 +101,6 @@ public class hMap {
         armServo        = hwMap.get(Servo.class, "armServo")          ;
 
         /* Sensors */
-        //color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
-
-        //color_sensor.enableLed(true);
+        color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
     }
 }

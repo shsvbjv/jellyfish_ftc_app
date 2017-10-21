@@ -48,14 +48,15 @@ public class Auto extends LinearOpMode {
 
     hMap robot = new hMap();
 
+    int rev = 1120;
+    boolean forward;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
 
-
-        int rev = 1; //one revolution
 
         //color sensor
         //color_sensor = hardwareMap.colorSensor.get("color");
@@ -126,18 +127,6 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
         //start Autonomous
-        waitForStart();
-        while (opModeIsActive()) {
-            /*
-
-            robot.init(hardwareMap);
-
-            robot.backLeft.setDirection(DcMotor.Direction.REVERSE);
-            robot.frontLeft.setDirection(DcMotor.Direction.REVERSE);
-            robot.backRight.setDirection(DcMotor.Direction.FORWARD);
-            robot.frontRight.setDirection(DcMotor.Direction.FORWARD);
-            */
-
             /*
              * See if any of the instances of {@link relicTemplate} are currently visible.
              * {@link RelicRecoveryVuMark} is an enum which can have the following values:
@@ -145,27 +134,27 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-           // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+        // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-              //  telemetry.addData("VuMark", "%s visible", vuMark);
+        //  telemetry.addData("VuMark", "%s visible", vuMark);
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-              //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-              //  telemetry.addData("Pose", format(pose));
+        //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+        //  telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
-               // if (pose != null) {
-                  //  VectorF trans = pose.getTranslation();
-                  //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        // if (pose != null) {
+        //  VectorF trans = pose.getTranslation();
+        //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+        // Extract the X, Y, and Z components of the offset of the target relative to the robot
                   /*  double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
@@ -183,45 +172,25 @@ public class Auto extends LinearOpMode {
             */
 
 
-//------------------------------------------------------------------------------------------------------------------------------
-            //turning and driving test
-            /*
-            if(isJewelRedFinal()){
-                telemetry.addData("The jewel is: ", "red");
-            }
-            else{
-                telemetry.addData("The jewel is: ", "blue");
-            }
-            */
-            sleep(1000);
+        //forward = isJewelRedFinal();
 
-            //forwards
-            VerticalDriveDistance(0.4, rev);
+        //if (forward) {
+            VerticalDriveDistance(-0.4, -2*rev);
             sleep(300);
-            //right
-            HorizontalStratffingDistance(0.4, rev);
-            sleep(300);
-            //backwards
-            VerticalDriveDistance(-0.4, rev);
-            sleep(300);
-            //left
-            HorizontalStratffingDistance(-0.4, rev);
-            sleep(300);
-            /*VerticalDriveDistance(0.4, rev);
-            sleep(300);
-            HorizontalStratffingDistance(-0.4, 2 * rev);
-            sleep(300);
-            HorizontalStratffingDistance(0.4, rev);
-            sleep(300);
-            HorizontalStratffingDistance(0.4, 5 * rev);
-            sleep(300);
-            */
+            HorizontalStrafingDistance(0.4, 4*rev);
+            RotateDistance(0.4, 3*rev/2);
+        //} else if(!forward) {
+        //    VerticalDriveDistance(-0.4, -rev / 2);
+        //}
+        //sleep(100);
 
 
-            //     turnAbsolute(target);
-            //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-            waitOneFullHardwareCycle();
-        }
+
+
+
+        //     turnAbsolute(target);
+        //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
+        waitOneFullHardwareCycle();
     }
 
 
@@ -231,8 +200,7 @@ public class Auto extends LinearOpMode {
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
-    public void StopDriving() {
-
+    void StopDriving() {
         robot.frontLeft.setPower(0);
         robot.frontRight.setPower(0);
         robot.backLeft.setPower(0);
@@ -241,7 +209,7 @@ public class Auto extends LinearOpMode {
 
     //distance=rate*duration duration=distance/rate
     //power drives forward, -power drives backward
-    public void VerticalDrive(double power) {
+    void VerticalDrive(double power) {
        /* double leftSpeed;
         double rightSpeed;
 
@@ -277,107 +245,131 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setPower(power);
         robot.backLeft.setPower(power);
         robot.backRight.setPower(power);
-
-
     }
 
     //power drives right, -power drives left
-    public void HorizontalStraffing(double power) {
+    void HorizontalStrafing(double power) {
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(-power);
+        robot.backLeft.setPower(-power);
+        robot.backRight.setPower(power);
+    }
+
+    void Rotate(double power) {
+        robot.frontLeft.setPower(power);
         robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
         robot.backRight.setPower(-power);
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
-    public void VerticalDriveDistance(double power, int distance) throws InterruptedException {
+    void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.frontLeft.setTargetPosition(distance);
         robot.frontRight.setTargetPosition(distance);
         robot.backLeft.setTargetPosition(distance);
         robot.backRight.setTargetPosition(distance);
+
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         VerticalDrive(power);
 
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
-    public void HorizontalStratffingDistance(double power, int distance) throws InterruptedException {
+    void HorizontalStrafingDistance(double power, int distance) throws InterruptedException {
         //reset encoders
-        robot.frontLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.frontRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backLeft.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        robot.backRight.setMode(DcMotor.RunMode.RESET_ENCODERS);
-
-        robot.frontLeft.setTargetPosition(distance);
-        robot.frontRight.setTargetPosition(distance);
-        robot.backLeft.setTargetPosition(distance);
-        robot.backRight.setTargetPosition(distance);
-
-        HorizontalStraffing(power);
+        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        robot.frontLeft.setTargetPosition(distance);
+        robot.frontRight.setTargetPosition(-distance);
+        robot.backLeft.setTargetPosition(-distance);
+        robot.backRight.setTargetPosition(distance);
+
+        HorizontalStrafing(power);
+
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
         StopDriving();
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    void RotateDistance(double power, int distance) throws InterruptedException {
+        {
+            //reset encoders
+            robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.frontLeft.setTargetPosition(distance);
+            robot.frontRight.setTargetPosition(-distance);
+            robot.backLeft.setTargetPosition(distance);
+            robot.backRight.setTargetPosition(-distance);
+
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            Rotate(power);
+
+            while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
+                //wait until robot stops
+            }
+
+            StopDriving();
+        }
 
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
     //Winching functions
 
-    public void grabBottom() throws InterruptedException {
+    void grabBottom() throws InterruptedException {
         robot.botServL.setPosition(robot.GRAB_CHOP_POS_A + 0.1);
         robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
         robot.bChop = true;
         sleep(300);
     }
 
-    public void startBottom() throws InterruptedException {
+    void startBottom() throws InterruptedException {
         robot.botServL.setPosition(robot.START_CHOP_POS_A);
         robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
         robot.bChop = false;
         sleep(300);
     }
 
-    public void grabTop() throws InterruptedException {
+    void grabTop() throws InterruptedException {
         robot.topServL.setPosition(robot.GRAB_CHOP_POS_B - 0.2);
         robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
         robot.tChop = true;
         sleep(300);
     }
 
-    public void startTop() throws InterruptedException {
+    void startTop() throws InterruptedException {
         robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
         robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
         robot.tChop = false;
@@ -386,37 +378,34 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
-    /*
-public boolean isJewelRed (){
-    telemetry.addData("blue value", robot.color_sensor.blue());
-    telemetry.addData("red value", robot.color_sensor.red());
+
+    public boolean isJewelRed() {
+        telemetry.addData("blue value", robot.color_sensor.blue());
+        telemetry.addData("red value", robot.color_sensor.red());
 
 
-    if(robot.color_sensor.red()>robot.color_sensor.blue()){
-        telemetry.addData("The color is ", "red");
-        telemetry.update();
-        return true;
+        if (robot.color_sensor.red() > robot.color_sensor.blue()) {
+            telemetry.addData("The color is ", "red");
+            telemetry.update();
+            return true;
+        } else {
+            telemetry.addData("The color is ", "blue");
+            telemetry.update();
+            return false;
+        }
     }
-    else{
-        telemetry.addData("The color is ", "blue");
-        telemetry.update();
-        return false;
-    }
-}
 
     public boolean isJewelRedFinal() {
         int red = 0;
         int blue = 0;
-        Boolean isRed = null;
+        boolean isRed = false;
 
         for (int i = 0; i < 20; i++) {
             if (isJewelRed()) {
                 red++;
-            } else if (!isJewelRed()) ;
-            {
+            } else {
                 blue++;
             }
-            sleep(100);
         }
 
         if (red < blue) {
@@ -428,7 +417,7 @@ public boolean isJewelRed (){
         return isRed;
 
     }
-    */
+
 
 //------------------------------------------------------------------------------------------------------------------------------
     //Turning Function

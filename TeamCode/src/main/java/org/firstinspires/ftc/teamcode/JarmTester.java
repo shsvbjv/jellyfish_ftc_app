@@ -19,26 +19,71 @@ import java.util.Scanner;
  * Created by KyleP on 10/14/2017
  */
 
-@Autonomous(name = "Jarm Tester")
+@TeleOp(name = "Jarm Tester")
 
 public class JarmTester extends LinearOpMode {
-
-    public Servo armServo;
+    hMap robot = new hMap();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        armServo        = hardwareMap.servo.get("armServo");
+        robot.init(hardwareMap);
 
-        armServo.setPosition(0.4);
+        robot.armServo        = hardwareMap.servo.get("armServo");
+        robot.color_sensor    = hardwareMap.colorSensor.get("color_sensor");
+        robot.color_sensor.enableLed(true);
 
         waitForStart();
 
+        robot.armServo.setPosition(0.4);
+
         while (opModeIsActive()) {
-            armServo.setPosition(0.4);
-            sleep(2000);
-            armServo.setPosition(0.7);
-            sleep(2000);
+            if(gamepad1.left_bumper) {
+                robot.armServo.setPosition(0.2);
+            } else if(gamepad1.right_bumper) {
+                robot.armServo.setPosition(0.8);
+            }
+
+            if(gamepad1.a) {
+                telemetry.addData("IsRed: ", isJewelRedFinal());
+                telemetry.update();
+            }
         }
+
+    }
+
+    public boolean isJewelRed (){
+        telemetry.addData("blue value", robot.color_sensor.blue());
+        telemetry.addData("red value", robot.color_sensor.red());
+        telemetry.update();
+
+        if(robot.color_sensor.red()>robot.color_sensor.blue()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean isJewelRedFinal() {
+        int red = 0;
+        int blue = 0;
+        boolean isRed = false;
+
+        for (int i = 0; i < 20; i++) {
+            if (isJewelRed()) {
+                red++;
+            } else {
+                blue++;
+            }
+        }
+
+        if (red < blue) {
+            isRed = false;
+        } else if (blue < red) {
+            isRed = true;
+        }
+
+        return isRed;
 
     }
 }
