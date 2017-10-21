@@ -31,10 +31,10 @@ public class hMap {
     public Servo       botServR    ;
 
     //Sensor Arm Servo, for jewel arm
-    public Servo       armServo    ;
+    //public Servo       armServo    ;
 
     /* Sensors */
-    public ColorSensor color_sensor;
+    //public ColorSensor color_sensor;
 
     //Values for the chopsticks and tail
     public static final double START_TAIL_POS    = 0.8;
@@ -98,9 +98,9 @@ public class hMap {
         topServR        = hwMap.get(Servo.class, "topServR")          ;
         botServL        = hwMap.get(Servo.class, "botServL")          ;
         botServR        = hwMap.get(Servo.class, "botServR")          ;
-        armServo        = hwMap.get(Servo.class, "armServo")          ;
+        //armServo        = hwMap.get(Servo.class, "armServo")          ;
 
         /* Sensors */
-        color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
+        //color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
     }
 }

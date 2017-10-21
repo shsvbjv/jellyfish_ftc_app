@@ -36,8 +36,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Feranno on 9/23/17. 123
  */
 
-@Autonomous(name = "Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "AutoRed")
+public class AutoRed extends LinearOpMode {
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -175,12 +175,13 @@ public class Auto extends LinearOpMode {
         //forward = isJewelRedFinal();
 
         //if (forward) {
-            VerticalDriveDistance(-0.4, -2*rev);
-            sleep(300);
-            RotateDistance(-0.4, -3*rev/2);
-            VerticalDriveDistance(0.8, rev);
-            VerticalDriveDistance(-0.8, -3*rev);
-            RotateDistance(0.8, 3*rev);
+        VerticalDriveDistance(-0.4, -2*rev);
+        sleep(300);
+        RotateDistance(-0.4, -3*rev/2);
+        VerticalDriveDistance(0.8, rev);
+        VerticalDriveDistance(-0.8, -3*rev);
+        RotateDistance(0.8, 3*rev);
+        VerticalDriveDistance(0.8, 2*rev);
         //} else if(!forward) {
         //    VerticalDriveDistance(-0.4, -rev / 2);
         //}
@@ -381,7 +382,7 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
+    public boolean isJewelRed() {
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
 
@@ -418,7 +419,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }*/
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------------------
