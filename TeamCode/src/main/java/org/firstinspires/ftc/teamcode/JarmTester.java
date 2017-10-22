@@ -22,6 +22,7 @@ import java.util.Scanner;
 @TeleOp(name = "Jarm Tester")
 
 public class JarmTester extends LinearOpMode {
+
     hMap robot = new hMap();
 
     @Override
