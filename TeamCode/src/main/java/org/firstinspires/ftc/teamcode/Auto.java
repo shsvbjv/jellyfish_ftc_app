@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import java.util.*;
 import java.util.Vector;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,6 +20,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -25,7 +28,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -38,6 +43,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
+
+    //heading for gyro
+    long heading;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -59,6 +67,38 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        //gyro stuff
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parametersGyro = new BNO055IMU.Parameters();
+        parametersGyro.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parametersGyro.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parametersGyro.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parametersGyro.loggingEnabled      = true;
+        parametersGyro.loggingTag          = "IMU";
+        parametersGyro.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        robot.imu.initialize(parametersGyro);
+
+        // Set up our telemetry dashboard
+        composeTelemetry();
+
+        // Wait until we're told to go
+        waitForStart();
+
+        // Start the logging of measured acceleration
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        // Loop and update the dashboard
+        while (opModeIsActive()) {
+            telemetry.update();
+        }
 
         robot.init(hardwareMap);
 
@@ -493,4 +533,84 @@ public class Auto extends LinearOpMode {
     }*/
 //------------------------------------------------------------------------------------------------------------------------------
 
+
+    void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            robot.angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            robot.gravity  = robot.imu.getGravity();
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return robot.imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return robot.imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                //rotating left adds to the heading, while rotating right makes the heading go down.
+                //when heading reaches 180 it'll become negative and start going down.
+
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+
+                        //heading is a string, so the below code makes it a long so it can actually be used
+                        heading = Long.parseLong(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+
+                        return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override public String value() {
+                        return robot.gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(robot.gravity.xAccel*robot.gravity.xAccel
+                                        + robot.gravity.yAccel*robot.gravity.yAccel
+                                        + robot.gravity.zAccel*robot.gravity.zAccel));
+                    }
+                });
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    //The two functions below are for gyro
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
 }
