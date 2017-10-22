@@ -605,6 +605,7 @@ public class Auto extends LinearOpMode {
     // Formatting
     //----------------------------------------------------------------------------------------------
 
+    //The two functions below are for gyro
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
