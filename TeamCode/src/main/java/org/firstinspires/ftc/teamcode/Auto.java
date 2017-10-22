@@ -53,6 +53,7 @@ public class Auto extends LinearOpMode {
     //1 revolution=7 encoder values
     //1 rev = 12.56637036144in = 1.0471975512ft or 12.5663706144in
     int rev = 1120;
+    int winchrev = 560;
     boolean forward;
 
 
@@ -179,15 +180,27 @@ public class Auto extends LinearOpMode {
         //forward = isJewelRedFinal();
 
         //if (forward) {
+
+            //Lifts Winch
+
+            //Drives off of balancing stone
             VerticalDriveDistance(-0.4, -2*rev);
             sleep(300);
+            //rotates towards wall
             RotateDistance(0.4, 3*rev/2);
             sleep(300);
-            VerticalDriveDistance(0.8, rev);
+            //rams wall
+            VerticalDriveDistance(0.5, rev);
             sleep(300);
-            VerticalDriveDistance(-0.8, -3*rev);
+            //backs up to cryptobox
+            VerticalDriveDistance(-0.8, -2*rev);
             sleep(300);
-            RotateDistance(0.8, 3*rev);
+            //rotates towards cryptobox
+            RotateDistance(0.8, 3*rev/2);
+            sleep(300);
+            //drive into cryptobox
+            VerticalDriveDistance(0.4, 3*rev/2);
+
         //} else if(!forward) {
         //    VerticalDriveDistance(-0.4, -rev / 2);
         //}
@@ -351,7 +364,27 @@ public class Auto extends LinearOpMode {
 
             StopDriving();
         }
+    }
 
+    void Winch(int distance) {
+        robot.lWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.lWinch.setTargetPosition(distance);
+        robot.rWinch.setTargetPosition(distance);
+
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.lWinch.setPower(1);
+        robot.rWinch.setPower(-1);
+
+        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
+            //wait until robot stops
+        }
+
+        robot.lWinch.setPower(0);
+        robot.rWinch.setPower(0);
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
