@@ -222,9 +222,18 @@ public class Auto extends LinearOpMode {
         //if (forward) {
             //
             grabTop();
+        //DETECTING JEWELS
             //Lifts Winch
             Winch(2*winchrev);
             sleep(300);
+            //servo moves down
+            robot.armServo.setPosition(0.2);
+            robot.armServo.setPosition(0.8);
+            //color sensor detects the color
+            telemetry.addData("IsRed: ", isJewelRedFinal());
+            telemetry.update();
+
+
             //Drives off of balancing stone
             VerticalDriveDistance(-0.4, -2*rev);
             sleep(300);
@@ -463,7 +472,7 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
+    public boolean isJewelRed() {
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
 
@@ -500,7 +509,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }*/
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------------------
