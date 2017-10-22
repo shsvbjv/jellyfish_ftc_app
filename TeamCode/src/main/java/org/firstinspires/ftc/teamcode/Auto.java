@@ -180,23 +180,25 @@ public class Auto extends LinearOpMode {
         //forward = isJewelRedFinal();
 
         //if (forward) {
-
+            //
+            grabTop();
             //Lifts Winch
-
+            Winch(2*winchrev);
+            sleep(300);
             //Drives off of balancing stone
             VerticalDriveDistance(-0.4, -2*rev);
             sleep(300);
             //rotates towards wall
-            RotateDistance(0.4, 3*rev/2);
+            RotateDistance(-0.4, -3*rev/2);
             sleep(300);
             //rams wall
-            VerticalDriveDistance(0.5, rev);
+            VerticalDriveDistance(-0.5, -rev);
             sleep(300);
             //backs up to cryptobox
-            VerticalDriveDistance(-0.8, -2*rev);
+            VerticalDriveDistance(0.8, 2*rev);
             sleep(300);
             //rotates towards cryptobox
-            RotateDistance(0.8, 3*rev/2);
+            RotateDistance(-0.8, -3*rev/2);
             sleep(300);
             //drive into cryptobox
             VerticalDriveDistance(0.4, 3*rev/2);
@@ -383,8 +385,8 @@ public class Auto extends LinearOpMode {
             //wait until robot stops
         }
 
-        robot.lWinch.setPower(0);
-        robot.rWinch.setPower(0);
+        robot.lWinch.setPower(0.05);
+        robot.rWinch.setPower(0.05);
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
