@@ -181,9 +181,12 @@ public class Auto extends LinearOpMode {
         //if (forward) {
             VerticalDriveDistance(-0.4, -2*rev);
             sleep(300);
-            RotateDistance(-0.4, -3*rev/2);
+            RotateDistance(0.4, 3*rev/2);
+            sleep(300);
             VerticalDriveDistance(0.8, rev);
+            sleep(300);
             VerticalDriveDistance(-0.8, -3*rev);
+            sleep(300);
             RotateDistance(0.8, 3*rev);
         //} else if(!forward) {
         //    VerticalDriveDistance(-0.4, -rev / 2);
