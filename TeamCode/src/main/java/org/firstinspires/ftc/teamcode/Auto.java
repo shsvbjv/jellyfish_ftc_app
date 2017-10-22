@@ -232,6 +232,13 @@ public class Auto extends LinearOpMode {
             //color sensor detects the color
             telemetry.addData("IsRed: ", isJewelRedFinal());
             telemetry.update();
+            //knocks off unwanted jewel
+            if(isJewelRedFinal()) {
+                RotateDistance(-0.8, -3 * rev / 2);
+            }
+            else{
+                RotateDistance(0.8, 3 * rev / 2);
+            }
 
 
             //Drives off of balancing stone
