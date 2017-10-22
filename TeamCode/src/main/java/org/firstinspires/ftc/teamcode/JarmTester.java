@@ -28,7 +28,7 @@ public class JarmTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-        robot.armServo        = hardwareMap.servo.get("armServo");
+        /*robot.armServo        = hardwareMap.servo.get("armServo");
         robot.color_sensor    = hardwareMap.colorSensor.get("color_sensor");
         robot.color_sensor.enableLed(true);
 
@@ -83,7 +83,6 @@ public class JarmTester extends LinearOpMode {
             isRed = true;
         }
 
-        return isRed;
-
+        return isRed;*/
     }
 }
