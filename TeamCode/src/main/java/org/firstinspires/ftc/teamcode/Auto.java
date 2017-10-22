@@ -48,7 +48,11 @@ public class Auto extends LinearOpMode {
 
     hMap robot = new hMap();
 
-    int rev = 1120;
+    //diameter of mecanum wheels = 4in
+    //Circumference = 12.5663706144in
+    //1 revolution=7 encoder values
+    //1 rev = 12.56637036144in = 1.0471975512ft or 12.5663706144in
+    int rev = 7;
     boolean forward;
 
 
