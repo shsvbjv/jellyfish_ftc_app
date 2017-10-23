@@ -29,9 +29,8 @@ public class JarmTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-
-        robot.armServo = hardwareMap.servo.get("armServo");
-        robot.color_sensor = hardwareMap.colorSensor.get("color_sensor");
+        robot.armServo        = hardwareMap.servo.get("armServo");
+        robot.color_sensor    = hardwareMap.colorSensor.get("color_sensor");
         robot.color_sensor.enableLed(true);
 
         waitForStart();
@@ -39,33 +38,29 @@ public class JarmTester extends LinearOpMode {
         robot.armServo.setPosition(0.4);
 
         while (opModeIsActive()) {
-            //servo moves down
-            if (gamepad1.left_bumper) {
+            if(gamepad1.left_bumper) {
                 robot.armServo.setPosition(0.2);
-            } else if (gamepad1.right_bumper) {
+            } else if(gamepad1.right_bumper) {
                 robot.armServo.setPosition(0.8);
             }
-            //color sensor detects the color
-            if (gamepad1.a) {
+
+            if(gamepad1.a) {
                 telemetry.addData("IsRed: ", isJewelRedFinal());
                 telemetry.update();
             }
-            //using the data, robot knocks off the jewel
-            //reposition itself back to original position using gyro
-
-
         }
 
     }
 
-    public boolean isJewelRed() {
+    public boolean isJewelRed (){
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
         telemetry.update();
 
-        if (robot.color_sensor.red() > robot.color_sensor.blue()) {
+        if(robot.color_sensor.red()>robot.color_sensor.blue()){
             return true;
-        } else {
+        }
+        else{
             return false;
         }
     }
@@ -90,5 +85,6 @@ public class JarmTester extends LinearOpMode {
         }
 
         return isRed;
+
     }
 }
