@@ -46,12 +46,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
+
 /**
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
-@Autonomous(name = "Sensor: BNO055 IMU")
-@Disabled                            // Comment this out to add to the opmode list
+//@Autonomous(name = "Sensor: BNO055 IMU")
+//@Disabled                            // Comment this out to add to the opmode list
+
 public class Gyro extends LinearOpMode
 {
     //----------------------------------------------------------------------------------------------
@@ -178,3 +180,4 @@ public class Gyro extends LinearOpMode
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
+

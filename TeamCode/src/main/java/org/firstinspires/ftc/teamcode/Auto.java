@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class Auto extends LinearOpMode {
 
     //heading for gyro
-    double heading;
+    long heading;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -63,6 +63,8 @@ public class Auto extends LinearOpMode {
     int rev = 1120;
     int winchrev = 560;
     boolean forward;
+    boolean found = false;
+    String cryptobox_column;
 
 
     @Override
@@ -102,22 +104,7 @@ public class Auto extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-
-        //color sensor
-        //color_sensor = hardwareMap.colorSensor.get("color");
-
-        //initialize gryo
-
-        //sensorGyro = hardwareMap.gyroSensor.get("gryo");
-        //mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
-        //int Accumulated; //total rotation: left, right
-        //int target = 0;
-
-        //sleep(1000);
-        //mrGryo.calibrate();
-        //while (mrGryo.isCalibrating()) {
-        //wait for calibrating to finish
-        //}
+        robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -179,28 +166,62 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-        // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+        forward = isJewelRedFinal();
 
+        if (forward) {
+            VerticalDriveDistance(-0.4, -rev);
+            sleep(100);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            //
+            /*grabTop();
+            //Lifts Winch
+            Winch(2*winchrev);
+            sleep(300);
+            //Drives off of balancing stone
+            VerticalDriveDistance(-0.4, -2*rev);
+            sleep(300);
+            //rotates towards wall
+            RotateDistance(-0.4, -3*rev/2);
+            sleep(300);
+            //rams wall
+            VerticalDriveDistance(-0.5, -3*rev/2);
+            sleep(300);
+            //backs up to cryptobox
+            VerticalDriveDistance(0.8, 2*rev);
+            sleep(300);
+            //rotates towards cryptobox
+            RotateDistance(-0.8, -3*rev/2);
+            sleep(300);
+            //drive into cryptobox
+            VerticalDriveDistance(0.4, 3*rev/2);*/
+
+        } else if(!forward) {
+            VerticalDriveDistance(0.4, rev/2);
+            sleep(100);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            VerticalDriveDistance(-0.4, 3*rev/2);
+            sleep(100);
+        }
+
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while(!found)
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                found = true;
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-        //  telemetry.addData("VuMark", "%s visible", vuMark);
-
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
-        //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-        //  telemetry.addData("Pose", format(pose));
-
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
-        // if (pose != null) {
-        //  VectorF trans = pose.getTranslation();
-        //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-        // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                  /*  double tX = trans.get(0);
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                cryptobox_column = vuMark.toString();
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
@@ -213,46 +234,7 @@ public class Auto extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
             }
 
-            telemetry.update();
-            */
-
-
-        //forward = isJewelRedFinal();
-
-        gyroRotateLeft(0.4);
-
-        //if (forward) {
-            //
-            grabTop();
-            //Lifts Winch
-            Winch(2*winchrev);
-            sleep(300);
-            //Drives off of balancing stone
-            VerticalDriveDistance(-0.4, -2*rev);
-            sleep(300);
-            //rotates towards wall
-            RotateDistance(-0.4, -3*rev/2);
-            sleep(300);
-            //rams wall
-            VerticalDriveDistance(-0.5, -rev);
-            sleep(300);
-            //backs up to cryptobox
-            VerticalDriveDistance(0.8, 2*rev);
-            sleep(300);
-            //rotates towards cryptobox
-            RotateDistance(-0.8, -3*rev/2);
-            sleep(300);
-            //drive into cryptobox
-            VerticalDriveDistance(0.4, 3*rev/2);
-
-        //} else if(!forward) {
-        //    VerticalDriveDistance(-0.4, -rev / 2);
-        //}
-        //sleep(100);
-
-
-
-
+        telemetry.update();
 
         //     turnAbsolute(target);
         //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -421,7 +403,7 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.lWinch.setPower(1);
-        robot.rWinch.setPower(-1);
+        robot.rWinch.setPower(1);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
@@ -465,18 +447,10 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
-        telemetry.addData("blue value", robot.color_sensor.blue());
-        telemetry.addData("red value", robot.color_sensor.red());
-
-
+    public boolean isJewelRed() {
         if (robot.color_sensor.red() > robot.color_sensor.blue()) {
-            telemetry.addData("The color is ", "red");
-            telemetry.update();
             return true;
         } else {
-            telemetry.addData("The color is ", "blue");
-            telemetry.update();
             return false;
         }
     }
@@ -502,7 +476,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }*/
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -535,20 +509,7 @@ public class Auto extends LinearOpMode {
     }*/
 //------------------------------------------------------------------------------------------------------------------------------
 
-
-    void composeTelemetry() {
-
-        // At the beginning of each telemetry update, grab a bunch of data
-        // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            robot.angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            robot.gravity  = robot.imu.getGravity();
-        }
-        });
+}
 
         telemetry.addLine()
                 .addData("status", new Func<String>() {
@@ -570,7 +531,7 @@ public class Auto extends LinearOpMode {
                     @Override public String value() {
 
                         //heading is a string, so the below code makes it a long so it can actually be used
-                        heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+                        heading = Long.parseLong(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
 
                         return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
 
@@ -616,29 +577,29 @@ public class Auto extends LinearOpMode {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-    void gyroRotateRight(double power) {
+        void gyroRotateRight(double power) {
 
         while(-88 < heading && heading < -92) {
-            robot.frontLeft.setPower(power);
-            robot.backLeft.setPower(power);
-            robot.frontRight.setPower(-power);
-            robot.backRight.setPower(-power);
+        robot.frontLeft.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backRight.setPower(-power);
         }
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-    }
+        }
 
-    void gyroRotateLeft(double power) {
+        void gyroRotateLeft(double power) {
 
         while(88 < heading && heading < 92) {
-            robot.frontLeft.setPower(power);
-            robot.backLeft.setPower(power);
-            robot.frontRight.setPower(-power);
-            robot.backRight.setPower(-power);
+        robot.frontLeft.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backRight.setPower(-power);
         }
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-    }
+        }
 }
