@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class Auto extends LinearOpMode {
 
     //heading for gyro
-    long heading;
+    double heading;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -218,6 +218,8 @@ public class Auto extends LinearOpMode {
 
 
         //forward = isJewelRedFinal();
+
+        gyroRotateLeft(0.4);
 
         //if (forward) {
             //
@@ -568,7 +570,7 @@ public class Auto extends LinearOpMode {
                     @Override public String value() {
 
                         //heading is a string, so the below code makes it a long so it can actually be used
-                        heading = Long.parseLong(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+                        heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
 
                         return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
 
@@ -612,5 +614,31 @@ public class Auto extends LinearOpMode {
 
     String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    void gyroRotateRight(double power) {
+
+        while(-88 < heading && heading < -92) {
+            robot.frontLeft.setPower(power);
+            robot.backLeft.setPower(power);
+            robot.frontRight.setPower(-power);
+            robot.backRight.setPower(-power);
+        }
+
+        // Should reset heading back to 0
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    }
+
+    void gyroRotateLeft(double power) {
+
+        while(88 < heading && heading < 92) {
+            robot.frontLeft.setPower(power);
+            robot.backLeft.setPower(power);
+            robot.frontRight.setPower(-power);
+            robot.backRight.setPower(-power);
+        }
+
+        // Should reset heading back to 0
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 }
