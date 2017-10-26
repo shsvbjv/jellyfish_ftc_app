@@ -166,13 +166,13 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-   //     forward = isJewelRedFinal();
+        forward = isJewelRedFinal();
 
-//        if (forward) {
-  //          VerticalDriveDistance(-0.4, -rev);
-      //      sleep(100);
-    //        robot.armServo.setPosition(robot.UP_JARM_POS);
-      //      sleep(100);
+        if (forward) {
+            VerticalDriveDistance(0.4, rev/2);
+            sleep(100);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
             //
             /*grabTop();
             //Lifts Winch
@@ -194,12 +194,12 @@ public class Auto extends LinearOpMode {
             RotateDistance(-0.8, -3*rev/2);
             sleep(300);
             //drive into cryptobox
-            VerticalDriveDistance(0.4, 3*rev/2);
+            VerticalDriveDistance(0.4, 3*rev/2);*/
 
-        //} else if(!forward) {
-        //    VerticalDriveDistance(-0.4, -rev / 2);
-        //}
-        //sleep(100);
+        } else if(!forward) {
+            VerticalDriveDistance(-0.4, -rev / 2);
+        }
+        sleep(100);
 
 
 
@@ -258,14 +258,14 @@ public class Auto extends LinearOpMode {
         StopDriving();
         waitOneFullHardwareCycle();
         */
-    //    robot.frontLeft.setPower(power);
-      //  robot.frontRight.setPower(power);
-       // robot.backLeft.setPower(power);
-        //robot.backRight.setPower(power);
-    //}
+        robot.frontLeft.setPower(power);
+        robot.frontRight.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.backRight.setPower(power);
+    }
 
     //power drives right, -power drives left
- /*   void HorizontalStrafing(double power) {
+    void HorizontalStrafing(double power) {
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(-power);
         robot.backLeft.setPower(-power);
@@ -278,12 +278,12 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setPower(-power);
         robot.backRight.setPower(-power);
     }
-    */
+
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
 
-        /*
+
         void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -300,9 +300,9 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-*/
 
-     //   VerticalDrive(power);
+
+        VerticalDrive(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
@@ -420,7 +420,7 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
+    public boolean isJewelRed() {
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
 
@@ -457,7 +457,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }*/
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------------------
