@@ -55,7 +55,8 @@ public class Auto extends LinearOpMode {
     int rev = 1120;
     int winchrev = 560;
     boolean forward;
-    String s;
+    boolean found = false;
+    String cryptobox_column;
 
 
     @Override
@@ -115,56 +116,12 @@ public class Auto extends LinearOpMode {
 
 
 //------------------------------------------------------------------------------------------------------------------------------
-        //start Autonomous
-            /*
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-          telemetry.addData("VuMark", "%s visible", vuMark);
-
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
-          OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-          telemetry.addData("Pose", format(pose));
-
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
-         if (pose != null) {
-          VectorF trans = pose.getTranslation();
-          Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-        // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
-
-                    // Extract the rotational components of the target relative to the robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
-                }
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-
-            telemetry.update();
-
-
 
         forward = isJewelRedFinal();
 
         if (forward) {
-            RotateDistance(-0.4, -rev/2);
+            VerticalDriveDistance(-0.4, -rev);
+            sleep(100);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(100);
             //
@@ -191,17 +148,45 @@ public class Auto extends LinearOpMode {
             VerticalDriveDistance(0.4, 3*rev/2);*/
 
         } else if(!forward) {
-            RotateDistance(0.4, rev / 2);
+            VerticalDriveDistance(0.4, rev/2);
+            sleep(100);
             robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            VerticalDriveDistance(-0.4, 3*rev/2);
             sleep(100);
         }
 
 
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while(!found)
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                found = true;
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                cryptobox_column = vuMark.toString();
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
 
+                    // Extract the rotational components of the target relative to the robot
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                }
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
 
+        telemetry.update();
 
-        //     turnAbsolute(target);
-        //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
         waitOneFullHardwareCycle();
     }
 
@@ -412,17 +397,9 @@ public class Auto extends LinearOpMode {
     //isJewelRed
 
     public boolean isJewelRed() {
-        telemetry.addData("blue value", robot.color_sensor.blue());
-        telemetry.addData("red value", robot.color_sensor.red());
-
-
         if (robot.color_sensor.red() > robot.color_sensor.blue()) {
-            telemetry.addData("The color is ", "red");
-            telemetry.update();
             return true;
         } else {
-            telemetry.addData("The color is ", "blue");
-            telemetry.update();
             return false;
         }
     }
