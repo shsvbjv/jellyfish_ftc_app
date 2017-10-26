@@ -475,21 +475,25 @@ public class Auto extends LinearOpMode {
     }
 
     void gyroRotateLeft(double power) {
-        double perfect90=90;
         robot.frontLeft.setPower(-power);
         robot.backLeft.setPower(-power);
         robot.frontRight.setPower(power);
         robot.backRight.setPower(power);
 
-        while (heading < 90) {
+        while (heading <95) {
+            telemetry.update();
+        }
+        StopDriving();
+        robot.frontLeft.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backRight.setPower(-power);
+
+        while(heading>92){
             telemetry.update();
         }
 
-
-
-
         StopDriving();
-
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
