@@ -89,7 +89,7 @@ public class Auto extends LinearOpMode {
         robot.imu.initialize(parametersGyro);
 
         // Set up our telemetry dashboard
-        composeTelemetry();
+       // composeTelemetry();
 
         // Wait until we're told to go
         waitForStart();
@@ -166,13 +166,13 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-        forward = isJewelRedFinal();
+   //     forward = isJewelRedFinal();
 
-        if (forward) {
-            VerticalDriveDistance(-0.4, -rev);
-            sleep(100);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(100);
+//        if (forward) {
+  //          VerticalDriveDistance(-0.4, -rev);
+      //      sleep(100);
+    //        robot.armServo.setPosition(robot.UP_JARM_POS);
+      //      sleep(100);
             //
             /*grabTop();
             //Lifts Winch
@@ -185,7 +185,7 @@ public class Auto extends LinearOpMode {
             RotateDistance(-0.4, -3*rev/2);
             sleep(300);
             //rams wall
-            VerticalDriveDistance(-0.5, -3*rev/2);
+            VerticalDriveDistance(-0.5, -rev);
             sleep(300);
             //backs up to cryptobox
             VerticalDriveDistance(0.8, 2*rev);
@@ -194,47 +194,16 @@ public class Auto extends LinearOpMode {
             RotateDistance(-0.8, -3*rev/2);
             sleep(300);
             //drive into cryptobox
-            VerticalDriveDistance(0.4, 3*rev/2);*/
+            VerticalDriveDistance(0.4, 3*rev/2);
 
-        } else if(!forward) {
-            VerticalDriveDistance(0.4, rev/2);
-            sleep(100);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(100);
-            VerticalDriveDistance(-0.4, 3*rev/2);
-            sleep(100);
-        }
+        //} else if(!forward) {
+        //    VerticalDriveDistance(-0.4, -rev / 2);
+        //}
+        //sleep(100);
 
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while(!found)
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-                found = true;
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
-                cryptobox_column = vuMark.toString();
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
-                if (pose != null) {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
 
-                    // Extract the rotational components of the target relative to the robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
-                }
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
 
-        telemetry.update();
 
         //     turnAbsolute(target);
         //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
@@ -289,14 +258,14 @@ public class Auto extends LinearOpMode {
         StopDriving();
         waitOneFullHardwareCycle();
         */
-        robot.frontLeft.setPower(power);
-        robot.frontRight.setPower(power);
-        robot.backLeft.setPower(power);
-        robot.backRight.setPower(power);
-    }
+    //    robot.frontLeft.setPower(power);
+      //  robot.frontRight.setPower(power);
+       // robot.backLeft.setPower(power);
+        //robot.backRight.setPower(power);
+    //}
 
     //power drives right, -power drives left
-    void HorizontalStrafing(double power) {
+ /*   void HorizontalStrafing(double power) {
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(-power);
         robot.backLeft.setPower(-power);
@@ -309,10 +278,13 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setPower(-power);
         robot.backRight.setPower(-power);
     }
+    */
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
-    void VerticalDriveDistance(double power, int distance) throws InterruptedException {
+
+        /*
+        void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -328,14 +300,15 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+*/
 
-        VerticalDrive(power);
+     //   VerticalDrive(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
-        StopDriving();
+        //StopDriving();
     }
 
     void HorizontalStrafingDistance(double power, int distance) throws InterruptedException {
@@ -355,13 +328,13 @@ public class Auto extends LinearOpMode {
         robot.backLeft.setTargetPosition(-distance);
         robot.backRight.setTargetPosition(distance);
 
-        HorizontalStrafing(power);
+       // HorizontalStrafing(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
-        StopDriving();
+//        StopDriving();
     }
 
     void RotateDistance(double power, int distance) throws InterruptedException {
@@ -382,13 +355,13 @@ public class Auto extends LinearOpMode {
             robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            Rotate(power);
+//            Rotate(power);
 
             while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
                 //wait until robot stops
             }
 
-            StopDriving();
+  //          StopDriving();
         }
     }
 
@@ -403,7 +376,7 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.lWinch.setPower(1);
-        robot.rWinch.setPower(1);
+        robot.rWinch.setPower(-1);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
@@ -447,10 +420,18 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    public boolean isJewelRed() {
+    /*public boolean isJewelRed() {
+        telemetry.addData("blue value", robot.color_sensor.blue());
+        telemetry.addData("red value", robot.color_sensor.red());
+
+
         if (robot.color_sensor.red() > robot.color_sensor.blue()) {
+            telemetry.addData("The color is ", "red");
+            telemetry.update();
             return true;
         } else {
+            telemetry.addData("The color is ", "blue");
+            telemetry.update();
             return false;
         }
     }
@@ -476,7 +457,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }
+    }*/
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -509,7 +490,20 @@ public class Auto extends LinearOpMode {
     }*/
 //------------------------------------------------------------------------------------------------------------------------------
 
-}
+
+    void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            robot.angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            robot.gravity  = robot.imu.getGravity();
+        }
+        });
 
         telemetry.addLine()
                 .addData("status", new Func<String>() {
@@ -577,29 +571,29 @@ public class Auto extends LinearOpMode {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-        void gyroRotateRight(double power) {
+    void gyroRotateRight(double power) {
 
         while(-88 < heading && heading < -92) {
-        robot.frontLeft.setPower(power);
-        robot.backLeft.setPower(power);
-        robot.frontRight.setPower(-power);
-        robot.backRight.setPower(-power);
+            robot.frontLeft.setPower(power);
+            robot.backLeft.setPower(power);
+            robot.frontRight.setPower(-power);
+            robot.backRight.setPower(-power);
         }
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        }
+    }
 
-        void gyroRotateLeft(double power) {
+    void gyroRotateLeft(double power) {
 
         while(88 < heading && heading < 92) {
-        robot.frontLeft.setPower(power);
-        robot.backLeft.setPower(power);
-        robot.frontRight.setPower(-power);
-        robot.backRight.setPower(-power);
+            robot.frontLeft.setPower(power);
+            robot.backLeft.setPower(power);
+            robot.frontRight.setPower(-power);
+            robot.backRight.setPower(-power);
         }
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        }
+    }
 }
