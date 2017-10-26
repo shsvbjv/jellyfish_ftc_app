@@ -180,7 +180,7 @@ public class Auto extends LinearOpMode {
 
         // Gyro Testing Here
 
-        gyroRotateLeft(0.4);
+        gyroRotateLeft(0.3);
 
     }
 
@@ -399,7 +399,6 @@ public class Auto extends LinearOpMode {
 
 
     void composeTelemetry() {
-        telemetry.update();
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
         telemetry.addAction(new Runnable() {
@@ -409,11 +408,11 @@ public class Auto extends LinearOpMode {
                 // to do that in each of the three items that need that info, as that's
                 // three times the necessary expense.
                 robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                robot.gravity = robot.imu.getGravity();
+                //robot.gravity = robot.imu.getGravity();
             }
         });
 
-        telemetry.addLine()
+        /*telemetry.addLine()
                 .addData("status", new Func<String>() {
                     @Override
                     public String value() {
@@ -426,6 +425,7 @@ public class Auto extends LinearOpMode {
                         return robot.imu.getCalibrationStatus().toString();
                     }
                 });
+                */
 
         telemetry.addLine()
                 //rotating left adds to the heading, while rotating right makes the heading go down.
@@ -440,35 +440,6 @@ public class Auto extends LinearOpMode {
 
                         return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
 
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
-                    }
-                });
-
-        telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return robot.gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(robot.gravity.xAccel * robot.gravity.xAccel
-                                        + robot.gravity.yAccel * robot.gravity.yAccel
-                                        + robot.gravity.zAccel * robot.gravity.zAccel));
                     }
                 });
     }
@@ -488,13 +459,13 @@ public class Auto extends LinearOpMode {
 
     void gyroRotateRight(double power) {
 
-        while (!((-88 >= heading) && (heading > -92))) {
-            composeTelemetry();
+        robot.frontLeft.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backRight.setPower(-power);
 
-            robot.frontLeft.setPower(power);
-            robot.backLeft.setPower(power);
-            robot.frontRight.setPower(-power);
-            robot.backRight.setPower(-power);
+        while (heading>-90) {
+            telemetry.update();
         }
 
         StopDriving();
@@ -504,15 +475,18 @@ public class Auto extends LinearOpMode {
     }
 
     void gyroRotateLeft(double power) {
+        double perfect90=90;
+        robot.frontLeft.setPower(-power);
+        robot.backLeft.setPower(-power);
+        robot.frontRight.setPower(power);
+        robot.backRight.setPower(power);
 
-        while (!((88 <= heading) && heading <= 92)) {
-            composeTelemetry();
-
-            robot.frontLeft.setPower(-power);
-            robot.backLeft.setPower(-power);
-            robot.frontRight.setPower(power);
-            robot.backRight.setPower(power);
+        while (heading < 90) {
+            telemetry.update();
         }
+
+
+
 
         StopDriving();
 
