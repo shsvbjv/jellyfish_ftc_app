@@ -38,14 +38,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by Feranno on 9/23/17. 123
+ * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
 
     //heading for gyro
-    long heading;
+    double heading;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -70,24 +70,6 @@ public class Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //gyro stuff
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parametersGyro = new BNO055IMU.Parameters();
-        parametersGyro.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parametersGyro.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parametersGyro.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parametersGyro.loggingEnabled      = true;
-        parametersGyro.loggingTag          = "IMU";
-        parametersGyro.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
-        robot.imu.initialize(parametersGyro);
-
         // Set up our telemetry dashboard
        // composeTelemetry();
 
@@ -98,11 +80,15 @@ public class Auto extends LinearOpMode {
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         // Loop and update the dashboard
-        while (opModeIsActive()) {
-            telemetry.update();
-        }
+        //while (opModeIsActive()) {
+         //   telemetry.update();
+        //}
 
         robot.init(hardwareMap);
+
+
+
+        gyroRotateLeft(0.4);
 
         robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
@@ -525,7 +511,7 @@ public class Auto extends LinearOpMode {
                     @Override public String value() {
 
                         //heading is a string, so the below code makes it a long so it can actually be used
-                        heading = Long.parseLong(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+                        heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
 
                         return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
 
@@ -573,7 +559,9 @@ public class Auto extends LinearOpMode {
 
     void gyroRotateRight(double power) {
 
-        while(-88 < heading && heading < -92) {
+        while(!((-88 >= heading) && (heading > -92))) {
+            composeTelemetry();
+
             robot.frontLeft.setPower(power);
             robot.backLeft.setPower(power);
             robot.frontRight.setPower(-power);
@@ -586,7 +574,9 @@ public class Auto extends LinearOpMode {
 
     void gyroRotateLeft(double power) {
 
-        while(88 < heading && heading < 92) {
+        while(!((88 <= heading) && heading <= 92)) {
+            composeTelemetry();
+
             robot.frontLeft.setPower(power);
             robot.backLeft.setPower(power);
             robot.frontRight.setPower(-power);
