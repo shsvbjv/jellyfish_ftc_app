@@ -29,25 +29,23 @@ public class JarmTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-        /*robot.armServo        = hardwareMap.servo.get("armServo");
+        robot.armServo        = hardwareMap.servo.get("armServo");
         robot.color_sensor    = hardwareMap.colorSensor.get("color_sensor");
         robot.color_sensor.enableLed(true);
 
         waitForStart();
 
-        robot.armServo.setPosition(0.4);
+        robot.armServo.setPosition(0.5);
 
         while (opModeIsActive()) {
             if(gamepad1.left_bumper) {
-                robot.armServo.setPosition(0.2);
+                robot.armServo.setPosition(robot.armServo.getPosition() - 0.1);
+                telemetry.addData("Position: ", robot.armServo.getPosition());
             } else if(gamepad1.right_bumper) {
-                robot.armServo.setPosition(0.8);
+                robot.armServo.setPosition(robot.armServo.getPosition() + 0.1);
+                telemetry.addData("Position: ", robot.armServo.getPosition());
             }
-
-            if(gamepad1.a) {
-                telemetry.addData("IsRed: ", isJewelRedFinal());
-                telemetry.update();
-            }
+            telemetry.update();
         }
 
     }
@@ -84,6 +82,6 @@ public class JarmTester extends LinearOpMode {
             isRed = true;
         }
 
-        return isRed;*/
+        return isRed;
     }
 }

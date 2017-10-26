@@ -55,6 +55,7 @@ public class Auto extends LinearOpMode {
     int rev = 1120;
     int winchrev = 560;
     boolean forward;
+    String s;
 
 
     @Override
@@ -62,22 +63,7 @@ public class Auto extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-
-        //color sensor
-        //color_sensor = hardwareMap.colorSensor.get("color");
-
-        //initialize gryo
-
-        //sensorGyro = hardwareMap.gyroSensor.get("gryo");
-        //mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
-        //int Accumulated; //total rotation: left, right
-        //int target = 0;
-
-        //sleep(1000);
-        //mrGryo.calibrate();
-        //while (mrGryo.isCalibrating()) {
-        //wait for calibrating to finish
-        //}
+        robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -123,8 +109,6 @@ public class Auto extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
         waitForStart();
 
         relicTrackables.activate();
@@ -139,28 +123,28 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-        // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-        //  telemetry.addData("VuMark", "%s visible", vuMark);
+          telemetry.addData("VuMark", "%s visible", vuMark);
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-        //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-        //  telemetry.addData("Pose", format(pose));
+          OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+          telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
-        // if (pose != null) {
-        //  VectorF trans = pose.getTranslation();
-        //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+         if (pose != null) {
+          VectorF trans = pose.getTranslation();
+          Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
         // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                  /*  double tX = trans.get(0);
+                    double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
@@ -174,14 +158,17 @@ public class Auto extends LinearOpMode {
             }
 
             telemetry.update();
-            */
 
 
-        //forward = isJewelRedFinal();
 
-        //if (forward) {
+        forward = isJewelRedFinal();
+
+        if (forward) {
+            RotateDistance(-0.4, -rev/2);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
             //
-            grabTop();
+            /*grabTop();
             //Lifts Winch
             Winch(2*winchrev);
             sleep(300);
@@ -192,7 +179,7 @@ public class Auto extends LinearOpMode {
             RotateDistance(-0.4, -3*rev/2);
             sleep(300);
             //rams wall
-            VerticalDriveDistance(-0.5, -rev);
+            VerticalDriveDistance(-0.5, -3*rev/2);
             sleep(300);
             //backs up to cryptobox
             VerticalDriveDistance(0.8, 2*rev);
@@ -201,12 +188,13 @@ public class Auto extends LinearOpMode {
             RotateDistance(-0.8, -3*rev/2);
             sleep(300);
             //drive into cryptobox
-            VerticalDriveDistance(0.4, 3*rev/2);
+            VerticalDriveDistance(0.4, 3*rev/2);*/
 
-        //} else if(!forward) {
-        //    VerticalDriveDistance(-0.4, -rev / 2);
-        //}
-        //sleep(100);
+        } else if(!forward) {
+            RotateDistance(0.4, rev / 2);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+        }
 
 
 
@@ -379,7 +367,7 @@ public class Auto extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.lWinch.setPower(1);
-        robot.rWinch.setPower(-1);
+        robot.rWinch.setPower(1);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
@@ -423,7 +411,7 @@ public class Auto extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
+    public boolean isJewelRed() {
         telemetry.addData("blue value", robot.color_sensor.blue());
         telemetry.addData("red value", robot.color_sensor.red());
 
@@ -460,7 +448,7 @@ public class Auto extends LinearOpMode {
 
         return isRed;
 
-    }*/
+    }
 
 
 //------------------------------------------------------------------------------------------------------------------------------
