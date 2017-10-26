@@ -73,16 +73,12 @@ public class Auto extends LinearOpMode {
         // Set up our telemetry dashboard
         composeTelemetry();
 
-        // Loop and update the dashboard
-        //while (opModeIsActive()) {
-        //   telemetry.update();
-        //}
 
         robot.init(hardwareMap);
 
+        robot.color_sensor.enableLed(false);
 
-
-        robot.armServo.setPosition(robot.DOWN_JARM_POS);
+        robot.armServo.setPosition(robot.UP_JARM_POS);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -145,7 +141,6 @@ public class Auto extends LinearOpMode {
              */
 
 
-
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 
@@ -206,37 +201,6 @@ public class Auto extends LinearOpMode {
     //distance=rate*duration duration=distance/rate
     //power drives forward, -power drives backward
     void VerticalDrive(double power) {
-       /* double leftSpeed;
-        double rightSpeed;
-
-        double target = mrGryo.getIntegratedZValue();
-        double startPosition = frontLeft.getCurrentPosition();
-
-        while (frontLeft.getCurrentPosition() < duration + startPosition) {
-            int zAccumulated = mrGryo.getIntegratedZValue();
-            leftSpeed = power + (zAccumulated - target) / 100;
-            rightSpeed = power - (zAccumulated - target) / 100;
-
-            leftSpeed = Range.clip(leftSpeed, -1, 1);
-            rightSpeed = Range.clip(rightSpeed, -1, 1);
-
-            frontLeft.setPower(leftSpeed);
-            backLeft.setPower(leftSpeed);
-            frontRight.setPower(rightSpeed);
-            backRight.setPower(rightSpeed);
-
-            telemetry.addData("1. frontLeft", frontLeft.getPower());
-            telemetry.addData("2. backLeft", backLeft.getPower());
-            telemetry.addData("3. frontRight", frontRight.getPower());
-            telemetry.addData("4. backRight", backRight.getPower());
-            telemetry.addData("5. Distance to go", (duration + startPosition) - frontLeft.getCurrentPosition());
-
-            waitOneFullHardwareCycle();
-        }
-
-        StopDriving();
-        waitOneFullHardwareCycle();
-        */
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(power);
         robot.backLeft.setPower(power);
@@ -263,7 +227,7 @@ public class Auto extends LinearOpMode {
     //Encoder Functions
 
 
-        void VerticalDriveDistance(double power, int distance) throws InterruptedException {
+    void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -307,7 +271,7 @@ public class Auto extends LinearOpMode {
         robot.backLeft.setTargetPosition(-distance);
         robot.backRight.setTargetPosition(distance);
 
-       // HorizontalStrafing(power);
+        // HorizontalStrafing(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
@@ -340,7 +304,7 @@ public class Auto extends LinearOpMode {
                 //wait until robot stops
             }
 
-  //          StopDriving();
+            //          StopDriving();
         }
     }
 
@@ -432,58 +396,33 @@ public class Auto extends LinearOpMode {
 
 
 //------------------------------------------------------------------------------------------------------------------------------
-    //Turning Function
-
-    /*public void turn(int target) throws InterruptedException {
-        turnAbsolute(target + mrGryo.getIntegratedZValue());
-    }
-
-    public void turnAbsolute(int target) throws InterruptedException {
-        int Accumulated = mrGryo.getIntegratedZValue(); //sets gryo readings to accumulated
-        double turnspeed = 0.15;
-
-        while (Accumulated - target > 3) {
-            if (Accumulated > target) { //if gryo is positive, turn left
-                TurnLeft(turnspeed);
-            }
-            if (Accumulated < target) { // if gryo is negative, turn right
-                TurnRight(turnspeed);
-            }
-
-            waitOneFullHardwareCycle();
-            Accumulated = mrGryo.getIntegratedZValue();
-            telemetry.addData("1. accu", String.format("%03d", Accumulated));
-
-        }
-        StopDriving();
-        telemetry.addData("1. accu", String.format("%03d", Accumulated));
-        waitOneFullHardwareCycle();
-    }*/
-//------------------------------------------------------------------------------------------------------------------------------
 
 
     void composeTelemetry() {
-
+        telemetry.update();
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            robot.angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            robot.gravity  = robot.imu.getGravity();
-        }
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                robot.gravity = robot.imu.getGravity();
+            }
         });
 
         telemetry.addLine()
                 .addData("status", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return robot.imu.getSystemStatus().toShortString();
                     }
                 })
                 .addData("calib", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return robot.imu.getCalibrationStatus().toString();
                     }
                 });
@@ -493,7 +432,8 @@ public class Auto extends LinearOpMode {
                 //when heading reaches 180 it'll become negative and start going down.
 
                 .addData("heading", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
 
                         //heading is a string, so the below code makes it a long so it can actually be used
                         heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
@@ -503,28 +443,32 @@ public class Auto extends LinearOpMode {
                     }
                 })
                 .addData("roll", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
                     }
                 })
                 .addData("pitch", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
                     }
                 });
 
         telemetry.addLine()
                 .addData("grvty", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return robot.gravity.toString();
                     }
                 })
                 .addData("mag", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(robot.gravity.xAccel*robot.gravity.xAccel
-                                        + robot.gravity.yAccel*robot.gravity.yAccel
-                                        + robot.gravity.zAccel*robot.gravity.zAccel));
+                                Math.sqrt(robot.gravity.xAccel * robot.gravity.xAccel
+                                        + robot.gravity.yAccel * robot.gravity.yAccel
+                                        + robot.gravity.zAccel * robot.gravity.zAccel));
                     }
                 });
     }
@@ -538,22 +482,22 @@ public class Auto extends LinearOpMode {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees){
+    String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
     void gyroRotateRight(double power) {
 
-        while(!((-88 >= heading) && (heading > -92))) {
+        while (!((-88 >= heading) && (heading > -92))) {
             composeTelemetry();
 
             robot.frontLeft.setPower(power);
             robot.backLeft.setPower(power);
             robot.frontRight.setPower(-power);
             robot.backRight.setPower(-power);
-
-            telemetry.update();
         }
+
+        StopDriving();
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
@@ -561,15 +505,16 @@ public class Auto extends LinearOpMode {
 
     void gyroRotateLeft(double power) {
 
-        while(!((88 <= heading) && heading <= 92)) {
+        while (!((88 <= heading) && heading <= 92)) {
             composeTelemetry();
-            telemetry.update();
 
-            robot.frontLeft.setPower(power);
-            robot.backLeft.setPower(power);
-            robot.frontRight.setPower(-power);
-            robot.backRight.setPower(-power);
+            robot.frontLeft.setPower(-power);
+            robot.backLeft.setPower(-power);
+            robot.frontRight.setPower(power);
+            robot.backRight.setPower(power);
         }
+
+        StopDriving();
 
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
