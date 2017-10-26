@@ -475,6 +475,7 @@ public class Auto extends LinearOpMode {
     }
 
     void gyroRotateLeft(double power) {
+        //turn left
         robot.frontLeft.setPower(-power);
         robot.backLeft.setPower(-power);
         robot.frontRight.setPower(power);
@@ -484,6 +485,7 @@ public class Auto extends LinearOpMode {
             telemetry.update();
         }
         StopDriving();
+        //turn right
         robot.frontLeft.setPower(power);
         robot.backLeft.setPower(power);
         robot.frontRight.setPower(-power);
@@ -492,6 +494,28 @@ public class Auto extends LinearOpMode {
         while(heading>92){
             telemetry.update();
         }
+        //turn left, then adjust right
+        while(88>heading){
+            //turn left
+            robot.frontLeft.setPower(-power);
+            robot.backLeft.setPower(-power);
+            robot.frontRight.setPower(power);
+            robot.backRight.setPower(power);
+            while(heading <95){
+                telemetry.update();
+            }
+            StopDriving();
+            //turn right
+            robot.frontLeft.setPower(power);
+            robot.backLeft.setPower(power);
+            robot.frontRight.setPower(-power);
+            robot.backRight.setPower(-power);
+
+            while(heading>92){
+                telemetry.update();
+            }
+        }
+
 
         StopDriving();
         // Should reset heading back to 0
