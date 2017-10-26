@@ -71,7 +71,7 @@ public class Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Set up our telemetry dashboard
-       // composeTelemetry();
+        // composeTelemetry();
 
         // Wait until we're told to go
         waitForStart();
@@ -81,11 +81,10 @@ public class Auto extends LinearOpMode {
 
         // Loop and update the dashboard
         //while (opModeIsActive()) {
-         //   telemetry.update();
+        //   telemetry.update();
         //}
 
         robot.init(hardwareMap);
-
 
 
         gyroRotateLeft(0.4);
@@ -155,7 +154,7 @@ public class Auto extends LinearOpMode {
         forward = isJewelRedFinal();
 
         if (forward) {
-            VerticalDriveDistance(0.4, rev/2);
+            VerticalDriveDistance(0.4, rev / 2);
             sleep(100);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(100);
@@ -182,17 +181,35 @@ public class Auto extends LinearOpMode {
             //drive into cryptobox
             VerticalDriveDistance(0.4, 3*rev/2);*/
 
-        } else if(!forward) {
+        } else if (!forward) {
             VerticalDriveDistance(-0.4, -rev / 2);
         }
         sleep(100);
 
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while (!found) {
+            found = true;
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            cryptobox_column = vuMark.toString();
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+            telemetry.addData("Pose", format(pose));
+            if (pose != null) {
+                VectorF trans = pose.getTranslation();
+                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                double tX = trans.get(0);
+                double tY = trans.get(1);
+                double tZ = trans.get(2);
+                double rX = rot.firstAngle;
+                double rY = rot.secondAngle;
+                double rZ = rot.thirdAngle;
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+        }
 
 
+        telemetry.update();
 
-
-        //     turnAbsolute(target);
-        //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
         waitOneFullHardwareCycle();
     }
 
