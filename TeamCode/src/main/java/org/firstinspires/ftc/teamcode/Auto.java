@@ -71,13 +71,7 @@ public class Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Set up our telemetry dashboard
-        // composeTelemetry();
-
-        // Wait until we're told to go
-        waitForStart();
-
-        // Start the logging of measured acceleration
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        composeTelemetry();
 
         // Loop and update the dashboard
         //while (opModeIsActive()) {
@@ -87,7 +81,6 @@ public class Auto extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-        gyroRotateLeft(0.4);
 
         robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
@@ -151,42 +144,24 @@ public class Auto extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-        forward = isJewelRedFinal();
+
+
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+
+        /*forward = isJewelRedFinal();
 
         if (forward) {
             VerticalDriveDistance(0.4, rev / 2);
             sleep(100);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(100);
-            //
-            /*grabTop();
-            //Lifts Winch
-            Winch(2*winchrev);
-            sleep(300);
-            //Drives off of balancing stone
-            VerticalDriveDistance(-0.4, -2*rev);
-            sleep(300);
-            //rotates towards wall
-            RotateDistance(-0.4, -3*rev/2);
-            sleep(300);
-            //rams wall
-            VerticalDriveDistance(-0.5, -rev);
-            sleep(300);
-            //backs up to cryptobox
-            VerticalDriveDistance(0.8, 2*rev);
-            sleep(300);
-            //rotates towards cryptobox
-            RotateDistance(-0.8, -3*rev/2);
-            sleep(300);
-            //drive into cryptobox
-            VerticalDriveDistance(0.4, 3*rev/2);*/
-
         } else if (!forward) {
             VerticalDriveDistance(-0.4, -rev / 2);
         }
-        sleep(100);
+        sleep(100);*/
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while (!found) {
             found = true;
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -205,12 +180,13 @@ public class Auto extends LinearOpMode {
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
-        }
+            telemetry.update();
+        }*/
 
+        // Gyro Testing Here
 
-        telemetry.update();
+        gyroRotateLeft(0.4);
 
-        waitOneFullHardwareCycle();
     }
 
 
@@ -424,17 +400,9 @@ public class Auto extends LinearOpMode {
     //isJewelRed
 
     public boolean isJewelRed() {
-        telemetry.addData("blue value", robot.color_sensor.blue());
-        telemetry.addData("red value", robot.color_sensor.red());
-
-
         if (robot.color_sensor.red() > robot.color_sensor.blue()) {
-            telemetry.addData("The color is ", "red");
-            telemetry.update();
             return true;
         } else {
-            telemetry.addData("The color is ", "blue");
-            telemetry.update();
             return false;
         }
     }
@@ -583,6 +551,8 @@ public class Auto extends LinearOpMode {
             robot.backLeft.setPower(power);
             robot.frontRight.setPower(-power);
             robot.backRight.setPower(-power);
+
+            telemetry.update();
         }
 
         // Should reset heading back to 0
@@ -593,6 +563,7 @@ public class Auto extends LinearOpMode {
 
         while(!((88 <= heading) && heading <= 92)) {
             composeTelemetry();
+            telemetry.update();
 
             robot.frontLeft.setPower(power);
             robot.backLeft.setPower(power);
