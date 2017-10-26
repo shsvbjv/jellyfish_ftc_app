@@ -485,7 +485,7 @@ public class Auto extends LinearOpMode {
             telemetry.update();
         }
         StopDriving();
-        //turn right
+        //turn right(major adjust)
         robot.frontLeft.setPower(power);
         robot.backLeft.setPower(power);
         robot.frontRight.setPower(-power);
@@ -494,14 +494,16 @@ public class Auto extends LinearOpMode {
         while(heading>92){
             telemetry.update();
         }
+        //adjusting to range of 2 degrees
         //turn left, then adjust right
-        while(88>heading){
+
+        while(88>heading) {
             //turn left
             robot.frontLeft.setPower(-power);
             robot.backLeft.setPower(-power);
             robot.frontRight.setPower(power);
             robot.backRight.setPower(power);
-            while(heading <95){
+            while (heading < 95) {
                 telemetry.update();
             }
             StopDriving();
@@ -511,7 +513,7 @@ public class Auto extends LinearOpMode {
             robot.frontRight.setPower(-power);
             robot.backRight.setPower(-power);
 
-            while(heading>92){
+            while (heading > 92) {
                 telemetry.update();
             }
         }
