@@ -243,11 +243,15 @@ public class Auto extends LinearOpMode {
         robot.backRight.setPower(power);
     }
 
-    void Rotate(double power) {
+    void rotateRight(double power) {
         robot.frontLeft.setPower(power);
         robot.backLeft.setPower(power);
         robot.frontRight.setPower(-power);
         robot.backRight.setPower(-power);
+    }
+
+    void rotateLeft(double power) {
+        rotateRight(-power);
     }
 
 
@@ -326,7 +330,7 @@ public class Auto extends LinearOpMode {
             robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-//            Rotate(power);
+            rotateRight(power);
 
             while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
                 //wait until robot stops
@@ -504,20 +508,25 @@ public class Auto extends LinearOpMode {
 
     void gyroRotateLeft(double power) {
         //turn left
-        robot.frontLeft.setPower(-power);
-        robot.backLeft.setPower(-power);
-        robot.frontRight.setPower(power);
-        robot.backRight.setPower(power);
+        rotateLeft(power+0.2);
+
+        while(heading<50){
+            telemetry.update();
+        }
+        //gradually slow turn
+        for(int x=20; x>0; x--) {
+            double addpower=power + (x/100);
+            rotateLeft(addpower);
+            telemetry.update();
+            sleep(50);
+        }
 
         while (heading <95) {
             telemetry.update();
         }
         StopDriving();
         //turn right(major adjust)
-        robot.frontLeft.setPower(power);
-        robot.backLeft.setPower(power);
-        robot.frontRight.setPower(-power);
-        robot.backRight.setPower(-power);
+        rotateRight(power);
 
         while(heading>92){
             telemetry.update();
@@ -528,18 +537,13 @@ public class Auto extends LinearOpMode {
         while(88>heading) {
             //turn left
             robot.frontLeft.setPower(-power);
-            robot.backLeft.setPower(-power);
-            robot.frontRight.setPower(power);
-            robot.backRight.setPower(power);
+            rotateLeft(power);
             while (heading < 95) {
                 telemetry.update();
             }
             StopDriving();
             //turn right
-            robot.frontLeft.setPower(power);
-            robot.backLeft.setPower(power);
-            robot.frontRight.setPower(-power);
-            robot.backRight.setPower(-power);
+            rotateRight(power);
 
             while (heading > 92) {
                 telemetry.update();
@@ -551,4 +555,5 @@ public class Auto extends LinearOpMode {
         // Should reset heading back to 0
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
+
 }
