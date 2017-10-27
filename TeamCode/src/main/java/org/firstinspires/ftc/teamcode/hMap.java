@@ -77,7 +77,7 @@ public class hMap {
 
     //Start and end positions for the jewel arm
     public static final double UP_JARM_POS = 1;
-    public static final double DOWN_JARM_POS = 0.0;
+    public static final double DOWN_JARM_POS = 0.2;
 
     //boolean for servo function
     public boolean tail ;

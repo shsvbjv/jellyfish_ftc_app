@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import java.util.*;
 import java.util.Vector;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,6 +20,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -25,7 +28,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -33,11 +38,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by Feranno on 9/23/17. 123
+ * From side of field w/o cryptobox, top blue corner
  */
 
-@Autonomous(name = "AutoBlue")
-public class AutoBlue extends LinearOpMode {
+@Autonomous(name = "Auto")
+public class AutoBlueTop extends LinearOpMode {
+
+    //heading for gyro
+    double heading;
 
     //GyroSensor sensorGyro;
     //ModernRoboticsI2cGyro mrGryo;
@@ -48,31 +56,28 @@ public class AutoBlue extends LinearOpMode {
 
     hMap robot = new hMap();
 
+    //diameter of mecanum wheels = 4in
+    //Circumference = 12.5663706144in
+    //1 rev = 12.56637036144in = 1.0471975512ft or 12.5663706144in
     int rev = 1120;
+    int winchrev = 560;
     boolean forward;
+    boolean found = false;
+    String cryptobox_column;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        // Set up our telemetry dashboard
+        composeTelemetry();
+
+
         robot.init(hardwareMap);
 
+        robot.color_sensor.enableLed(false);
 
-        //color sensor
-        //color_sensor = hardwareMap.colorSensor.get("color");
-
-        //initialize gryo
-
-        //sensorGyro = hardwareMap.gyroSensor.get("gryo");
-        //mrGryo = (ModernRoboticsI2cGyro) sensorGyro;
-        //int Accumulated; //total rotation: left, right
-        //int target = 0;
-
-        //sleep(1000);
-        //mrGryo.calibrate();
-        //while (mrGryo.isCalibrating()) {
-        //wait for calibrating to finish
-        //}
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -118,8 +123,6 @@ public class AutoBlue extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
         waitForStart();
 
         relicTrackables.activate();
@@ -134,66 +137,78 @@ public class AutoBlue extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
 
-        // RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-        //  telemetry.addData("VuMark", "%s visible", vuMark);
 
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
-        //  OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-        //  telemetry.addData("Pose", format(pose));
+        robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
-        // if (pose != null) {
-        //  VectorF trans = pose.getTranslation();
-        //  Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        forward = isJewelRedFinal();
 
-        // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                  /*  double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
+        grabTop();
 
-                    // Extract the rotational components of the target relative to the robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
-                }
+        if (forward) {
+            RotateDistance(-0.4, -rev/2);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            RotateDistance(0.4, rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(-0.5, -2*rev);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2 + 300);
+            sleep(100);
+            startTop();
+
+        } else if (!forward) {
+            VerticalDriveDistance(-0.4, -2*rev);
+            sleep(300);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(-0.5, -2*rev);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2 + 300);
+            sleep(100);
+            startTop();
+        }
+        sleep(100);
+
+        /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while (!found) {
+            found = true;
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            cryptobox_column = vuMark.toString();
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+            telemetry.addData("Pose", format(pose));
+            if (pose != null) {
+                VectorF trans = pose.getTranslation();
+                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                double tX = trans.get(0);
+                double tY = trans.get(1);
+                double tZ = trans.get(2);
+                double rX = rot.firstAngle;
+                double rY = rot.secondAngle;
+                double rZ = rot.thirdAngle;
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
-
             telemetry.update();
-            */
+        }*/
 
 
-        //forward = isJewelRedFinal();
-
-        //if (forward) {
-        VerticalDriveDistance(-0.4, -2*rev);
-        sleep(300);
-        RotateDistance(-0.4, -3*rev/2);
-        VerticalDriveDistance(0.8, rev);
-        VerticalDriveDistance(-0.8, -3*rev);
-        RotateDistance(0.8, 3*rev);
-        VerticalDriveDistance(0.8, 2*rev);
-        //} else if(!forward) {
-        //    VerticalDriveDistance(-0.4, -rev / 2);
-        //}
-        //sleep(100);
-
-
-
-
-
-        //     turnAbsolute(target);
-        //    telemetry.addData("1. accu", String.format("%03d", mrGryo.getIntegratedZValue()));
-        waitOneFullHardwareCycle();
     }
 
 
@@ -213,37 +228,6 @@ public class AutoBlue extends LinearOpMode {
     //distance=rate*duration duration=distance/rate
     //power drives forward, -power drives backward
     void VerticalDrive(double power) {
-       /* double leftSpeed;
-        double rightSpeed;
-
-        double target = mrGryo.getIntegratedZValue();
-        double startPosition = frontLeft.getCurrentPosition();
-
-        while (frontLeft.getCurrentPosition() < duration + startPosition) {
-            int zAccumulated = mrGryo.getIntegratedZValue();
-            leftSpeed = power + (zAccumulated - target) / 100;
-            rightSpeed = power - (zAccumulated - target) / 100;
-
-            leftSpeed = Range.clip(leftSpeed, -1, 1);
-            rightSpeed = Range.clip(rightSpeed, -1, 1);
-
-            frontLeft.setPower(leftSpeed);
-            backLeft.setPower(leftSpeed);
-            frontRight.setPower(rightSpeed);
-            backRight.setPower(rightSpeed);
-
-            telemetry.addData("1. frontLeft", frontLeft.getPower());
-            telemetry.addData("2. backLeft", backLeft.getPower());
-            telemetry.addData("3. frontRight", frontRight.getPower());
-            telemetry.addData("4. backRight", backRight.getPower());
-            telemetry.addData("5. Distance to go", (duration + startPosition) - frontLeft.getCurrentPosition());
-
-            waitOneFullHardwareCycle();
-        }
-
-        StopDriving();
-        waitOneFullHardwareCycle();
-        */
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(power);
         robot.backLeft.setPower(power);
@@ -258,15 +242,21 @@ public class AutoBlue extends LinearOpMode {
         robot.backRight.setPower(power);
     }
 
-    void Rotate(double power) {
+    void rotateRight(double power) {
         robot.frontLeft.setPower(power);
         robot.backLeft.setPower(power);
         robot.frontRight.setPower(-power);
         robot.backRight.setPower(-power);
     }
 
+    void rotateLeft(double power) {
+        rotateRight(-power);
+    }
+
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
+
+
     void VerticalDriveDistance(double power, int distance) throws InterruptedException {
         //reset encoders
         robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -284,13 +274,14 @@ public class AutoBlue extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         VerticalDrive(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
-        StopDriving();
+        //StopDriving();
     }
 
     void HorizontalStrafingDistance(double power, int distance) throws InterruptedException {
@@ -310,15 +301,16 @@ public class AutoBlue extends LinearOpMode {
         robot.backLeft.setTargetPosition(-distance);
         robot.backRight.setTargetPosition(distance);
 
-        HorizontalStrafing(power);
+        // HorizontalStrafing(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
-        StopDriving();
+//        StopDriving();
     }
 
+    //power is right, -power is left
     void RotateDistance(double power, int distance) throws InterruptedException {
         {
             //reset encoders
@@ -337,15 +329,35 @@ public class AutoBlue extends LinearOpMode {
             robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            Rotate(power);
+            rotateRight(power);
 
             while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
                 //wait until robot stops
             }
 
-            StopDriving();
+            //          StopDriving();
+        }
+    }
+
+    void Winch(int distance) {
+        robot.lWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.lWinch.setTargetPosition(distance);
+        robot.rWinch.setTargetPosition(distance);
+
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.lWinch.setPower(1);
+        robot.rWinch.setPower(-1);
+
+        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
+            //wait until robot stops
         }
 
+        robot.lWinch.setPower(0.05);
+        robot.rWinch.setPower(0.05);
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -382,18 +394,10 @@ public class AutoBlue extends LinearOpMode {
 //------------------------------------------------------------------------------------------------------------------------------
     //isJewelRed
 
-    /*public boolean isJewelRed() {
-        telemetry.addData("blue value", robot.color_sensor.blue());
-        telemetry.addData("red value", robot.color_sensor.red());
-
-
+    public boolean isJewelRed() {
         if (robot.color_sensor.red() > robot.color_sensor.blue()) {
-            telemetry.addData("The color is ", "red");
-            telemetry.update();
             return true;
         } else {
-            telemetry.addData("The color is ", "blue");
-            telemetry.update();
             return false;
         }
     }
@@ -420,37 +424,133 @@ public class AutoBlue extends LinearOpMode {
         return isRed;
 
     }
-    */
 
 
 //------------------------------------------------------------------------------------------------------------------------------
-    //Turning Function
 
-    /*public void turn(int target) throws InterruptedException {
-        turnAbsolute(target + mrGryo.getIntegratedZValue());
+
+    void composeTelemetry() {
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                //robot.gravity = robot.imu.getGravity();
+            }
+        });
+
+        /*telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getCalibrationStatus().toString();
+                    }
+                });
+                */
+
+        telemetry.addLine()
+                //rotating left adds to the heading, while rotating right makes the heading go down.
+                //when heading reaches 180 it'll become negative and start going down.
+
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+
+                        //heading is a string, so the below code makes it a long so it can actually be used
+                        heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+
+                        return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+
+                    }
+                });
     }
 
-    public void turnAbsolute(int target) throws InterruptedException {
-        int Accumulated = mrGryo.getIntegratedZValue(); //sets gryo readings to accumulated
-        double turnspeed = 0.15;
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
 
-        while (Accumulated - target > 3) {
-            if (Accumulated > target) { //if gryo is positive, turn left
-                TurnLeft(turnspeed);
-            }
-            if (Accumulated < target) { // if gryo is negative, turn right
-                TurnRight(turnspeed);
-            }
+    //The two functions below are for gyro
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
 
-            waitOneFullHardwareCycle();
-            Accumulated = mrGryo.getIntegratedZValue();
-            telemetry.addData("1. accu", String.format("%03d", Accumulated));
+    String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
 
+    void gyroRotateRight(double power) {
+
+        robot.frontLeft.setPower(power);
+        robot.backLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backRight.setPower(-power);
+
+        while (heading>-90) {
+            telemetry.update();
+        }
+
+        StopDriving();
+
+        // Should reset heading back to 0
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    }
+
+    void gyroRotateLeft(double power) {
+        //turn left
+        rotateLeft(power+0.2);
+
+        while(heading<50){
+            telemetry.update();
+        }
+        //gradually slow turn
+        for(int x=20; x>0; x--) {
+            double addpower=power + (x/100);
+            rotateLeft(addpower);
+            telemetry.update();
+            sleep(50);
+        }
+
+        while (heading <95) {
+            telemetry.update();
         }
         StopDriving();
-        telemetry.addData("1. accu", String.format("%03d", Accumulated));
-        waitOneFullHardwareCycle();
-    }*/
-//------------------------------------------------------------------------------------------------------------------------------
+        //turn right(major adjust)
+        rotateRight(power);
 
+        while(heading>92){
+            telemetry.update();
+        }
+        //adjusting to range of 2 degrees
+        //turn left, then adjust right
+
+        while(88>heading) {
+            //turn left
+            robot.frontLeft.setPower(-power);
+            rotateLeft(power);
+            while (heading < 95) {
+                telemetry.update();
+            }
+            StopDriving();
+            //turn right
+            rotateRight(power);
+
+            while (heading > 92) {
+                telemetry.update();
+            }
+        }
+
+        StopDriving();
+        // Should reset heading back to 0
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    }
 }

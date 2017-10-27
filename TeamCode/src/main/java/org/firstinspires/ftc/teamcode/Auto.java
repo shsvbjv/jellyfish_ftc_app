@@ -78,7 +78,7 @@ public class Auto extends LinearOpMode {
 
         robot.color_sensor.enableLed(false);
 
-        robot.armServo.setPosition(robot.UP_JARM_POS);
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -124,8 +124,6 @@ public class Auto extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
         waitForStart();
 
         relicTrackables.activate();
@@ -141,20 +139,53 @@ public class Auto extends LinearOpMode {
              */
 
 
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+        robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
-        /*forward = isJewelRedFinal();
+        forward = isJewelRedFinal();
+
+        grabTop();
 
         if (forward) {
-            VerticalDriveDistance(0.4, rev / 2);
-            sleep(100);
+            RotateDistance(-0.4, -rev/2);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(100);
+            RotateDistance(0.4, rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(-0.5, -2*rev);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2 + 300);
+            sleep(100);
+            startTop();
+
         } else if (!forward) {
-            VerticalDriveDistance(-0.4, -rev / 2);
+            VerticalDriveDistance(-0.4, -2*rev);
+            sleep(300);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(-0.5, -2*rev);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2);
+            sleep(100);
+            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+            gyroRotateLeft(0.8);
+            sleep(100);
+            VerticalDriveDistance(0.5, 3*rev/2 + 300);
+            sleep(100);
+            startTop();
         }
-        sleep(100);*/
+        sleep(100);
 
         /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while (!found) {
@@ -178,9 +209,6 @@ public class Auto extends LinearOpMode {
             telemetry.update();
         }*/
 
-        // Gyro Testing Here
-
-        gyroRotateLeft(0.3);
 
     }
 

@@ -16,6 +16,8 @@ public class Arcade extends LinearOpMode {
     boolean winchbutton = false;
     boolean topServo = false;
     boolean botServo = false;
+    boolean topHalf = false;
+    boolean botHalf = false;
     int lmotorpos;
     int rmotorpos;
 
@@ -148,6 +150,10 @@ public class Arcade extends LinearOpMode {
                 robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.bChop = true;
             }
+        } else if(!botHalf && gamepad2.dpad_down) {
+            robot.botServL.setPosition(robot.GRAB_CHOP_POS_A - 0.1);
+            robot.botServR.setPosition(robot.GRAB_CHOP_POS_B + 0.1);
+            robot.bChop = true;
         } else {
             if (!botServo && gamepad2.a) {
                 robot.botServL.setPosition(robot.START_CHOP_POS_A);
@@ -162,6 +168,10 @@ public class Arcade extends LinearOpMode {
                 robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
             }
+        } else if(!topHalf && gamepad1.dpad_up) {
+            robot.topServL.setPosition(robot.GRAB_CHOP_POS_B + 0.1);
+            robot.topServR.setPosition(robot.GRAB_CHOP_POS_A - 0.1);
+            robot.tChop = true;
         } else {
             if (!topServo && gamepad2.y) {
                 robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
@@ -171,6 +181,8 @@ public class Arcade extends LinearOpMode {
         }
         botServo = gamepad2.a;
         topServo = gamepad2.y;
+        topHalf = gamepad2.dpad_up;
+        botHalf = gamepad2.dpad_down;
     }
 }
 
