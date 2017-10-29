@@ -76,8 +76,8 @@ public class hMap {
     public static final double GRAB_CHOP_POS_B   = 0.6;
 
     //Start and end positions for the jewel arm
-    public static final double UP_JARM_POS = 1;
-    public static final double DOWN_JARM_POS = 0.2;
+    public static final double UP_JARM_POS = 0;
+    public static final double DOWN_JARM_POS = 0.75;
 
     //boolean for servo function
     public boolean tail ;
@@ -93,18 +93,6 @@ public class hMap {
 
 
         hwMap = ahwMap;
-
-        //Gyro
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
         /* Motors */
 
@@ -148,5 +136,18 @@ public class hMap {
 
         /* Sensors */
         color_sensor    = hwMap.get(ColorSensor.class, "color_sensor");
+    }
+
+    public void gyroInit() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 }
