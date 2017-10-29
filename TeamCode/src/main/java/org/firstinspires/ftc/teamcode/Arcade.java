@@ -39,6 +39,10 @@ public class Arcade extends LinearOpMode {
         robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
         robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
         robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
+        robot.tChop = false;
+        robot.bChop = false;
+        robot.tHalf = false;
+        robot.bHalf = false;
 
         waitForStart();
 
@@ -144,10 +148,20 @@ public class Arcade extends LinearOpMode {
     }
 
     void servo() {
-        if (!botHalf && gamepad2.dpad_down) {
-            robot.botServL.setPosition(robot.GRAB_CHOP_POS_A - 0.1);
-            robot.botServR.setPosition(robot.GRAB_CHOP_POS_B + 0.2);
-            robot.bChop = false;
+        if(!robot.bHalf) {
+            if (!botHalf && gamepad2.dpad_down) {
+                robot.botServL.setPosition(0.3);
+                robot.botServR.setPosition(0.8);
+                robot.bChop = false;
+                robot.bHalf = true;
+            }
+        } else {
+            if (!botHalf && gamepad2.dpad_down) {
+                robot.botServL.setPosition(robot.START_CHOP_POS_A);
+                robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
+                robot.bChop = false;
+                robot.bHalf = false;
+            }
         }
 
         if (!robot.bChop) {
@@ -155,19 +169,31 @@ public class Arcade extends LinearOpMode {
                 robot.botServL.setPosition(robot.GRAB_CHOP_POS_A + 0.1);
                 robot.botServR.setPosition(robot.GRAB_CHOP_POS_B);
                 robot.bChop = true;
+                robot.bHalf = false;
             }
         } else {
             if (!botServo && gamepad2.a) {
                 robot.botServL.setPosition(robot.START_CHOP_POS_A);
                 robot.botServR.setPosition(robot.START_CHOP_POS_B + 0.1);
                 robot.bChop = false;
+                robot.bHalf = false;
             }
         }
 
-        if (!topHalf && gamepad2.dpad_up) {
-            robot.topServL.setPosition(0.6);
-            robot.topServR.setPosition(0.2);
-            robot.tChop = false;
+        if(!robot.tHalf) {
+            if (!topHalf && gamepad2.dpad_up) {
+                robot.topServL.setPosition(0.6);
+                robot.topServR.setPosition(0.2);
+                robot.tChop = false;
+                robot.tHalf = true;
+            }
+        } else {
+            if (!topHalf && gamepad2.dpad_up) {
+                robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
+                robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
+                robot.tChop = false;
+                robot.tHalf = false;
+            }
         }
 
         if (!robot.tChop) {
@@ -175,12 +201,14 @@ public class Arcade extends LinearOpMode {
                 robot.topServL.setPosition(robot.GRAB_CHOP_POS_B - 0.2);
                 robot.topServR.setPosition(robot.GRAB_CHOP_POS_A);
                 robot.tChop = true;
+                robot.tHalf = false;
             }
         } else {
             if (!topServo && gamepad2.y) {
                 robot.topServL.setPosition(robot.START_CHOP_POS_B - 0.1);
                 robot.topServR.setPosition(robot.START_CHOP_POS_A - 0.1);
                 robot.tChop = false;
+                robot.tHalf = false;
             }
         }
 

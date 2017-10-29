@@ -83,6 +83,8 @@ public class hMap {
     public boolean tail ;
     public boolean tChop;
     public boolean bChop;
+    public boolean tHalf;
+    public boolean bHalf;
 
     HardwareMap hwMap;
 
