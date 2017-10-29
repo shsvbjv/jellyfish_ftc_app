@@ -205,7 +205,7 @@ public class AutoRedTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 4);
+            VerticalDriveDistance(-0.3, -rev / 2);
         } else if (!forward) {
             RotateDistance(0.3, rev/2);
             sleep(100);
@@ -233,7 +233,7 @@ public class AutoRedTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 4);
+            VerticalDriveDistance(-0.3, -rev / 2);
         }
 
         //sleep(100);

@@ -215,7 +215,7 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 4);
+            VerticalDriveDistance(-0.3, -rev / 2);
         } else if (!forward) {
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
@@ -239,7 +239,7 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 4);
+            VerticalDriveDistance(-0.3, -rev / 2);
         }
 
         //sleep(100);
