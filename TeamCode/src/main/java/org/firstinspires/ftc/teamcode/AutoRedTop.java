@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -41,13 +42,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
-@Autonomous(name = "Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "AutoRedTop")
+public class AutoRedTop extends LinearOpMode {
 
     //heading for gyro
     double heading;
     double temp;
 
+    ElapsedTime runtime = new ElapsedTime();
 
     VuforiaLocalizer vuforia;
 
@@ -122,6 +124,8 @@ public class Auto extends LinearOpMode {
 
         waitForStart();
 
+        runtime.reset();
+
         relicTrackables.activate();
 
 
@@ -175,8 +179,10 @@ public class Auto extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
             }
             telemetry.update();
+            if(runtime.seconds() > 5) {
+                break;
+            }
         }
-
         if (forward) {
             VerticalDriveDistance(0.4, 2*rev);
             sleep(100);
@@ -185,10 +191,14 @@ public class Auto extends LinearOpMode {
             sleep(100);
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 2 * rev);
-            sleep(500);
-            VerticalDriveDistance(0.3, rev/6);
-            sleep(100);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.3, 2*rev);
+            } else {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 200);
+            }
+            sleep(300);
             RotateDistance(0.5, 3 * rev / 2 - 100);
             sleep(200);
             VerticalDriveDistance(0.5, 3 * rev / 2);
@@ -209,9 +219,13 @@ public class Auto extends LinearOpMode {
             sleep(100);
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 2 * rev);
-            sleep(500);
-            VerticalDriveDistance(0.3, rev/6);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.3, 2 * rev);
+            } else {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
+            };
             sleep(100);
             RotateDistance(0.5, 3 * rev / 2 - 100);
             sleep(200);

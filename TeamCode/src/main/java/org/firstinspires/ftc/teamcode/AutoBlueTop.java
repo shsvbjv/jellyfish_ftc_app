@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -38,26 +39,25 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * From side of field w/o cryptobox, top blue corner
+ * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
-@Autonomous(name = "Auto")
+@Autonomous(name = "AutoBlueTop")
 public class AutoBlueTop extends LinearOpMode {
 
     //heading for gyro
     double heading;
+    double temp;
 
-    //GyroSensor sensorGyro;
-    //ModernRoboticsI2cGyro mrGryo;
+    ElapsedTime runtime = new ElapsedTime();
 
     VuforiaLocalizer vuforia;
-
-    //ColorSensor color_sensor;
 
     hMap robot = new hMap();
 
     //diameter of mecanum wheels = 4in
     //Circumference = 12.5663706144in
+    //1 revolution=7 encoder values
     //1 rev = 12.56637036144in = 1.0471975512ft or 12.5663706144in
     int rev = 1120;
     int winchrev = 560;
@@ -72,12 +72,11 @@ public class AutoBlueTop extends LinearOpMode {
         // Set up our telemetry dashboard
         composeTelemetry();
 
-
         robot.init(hardwareMap);
 
-        robot.color_sensor.enableLed(false);
+        setHeadingToZero();
 
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        robot.color_sensor.enableLed(true);
 
 
 //------------------------------------------------------------------------------------------------------------------------------
@@ -125,6 +124,8 @@ public class AutoBlueTop extends LinearOpMode {
 
         waitForStart();
 
+        runtime.reset();
+
         relicTrackables.activate();
 
 
@@ -138,53 +139,110 @@ public class AutoBlueTop extends LinearOpMode {
              */
 
 
-
         robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
         forward = isJewelRedFinal();
 
         grabTop();
 
-        if (forward) {
-            RotateDistance(-0.4, -rev/2);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(100);
-            RotateDistance(0.4, rev/2);
-            sleep(100);
-            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            gyroRotateLeft(0.8);
-            sleep(100);
-            VerticalDriveDistance(-0.5, -2*rev);
-            sleep(100);
-            VerticalDriveDistance(0.5, 3*rev/2);
-            sleep(100);
-            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            gyroRotateLeft(0.8);
-            sleep(100);
-            VerticalDriveDistance(0.5, 3*rev/2 + 300);
-            sleep(100);
-            startTop();
+        sleep(500);
 
-        } else if (!forward) {
-            VerticalDriveDistance(-0.4, -2*rev);
-            sleep(300);
+        Winch(1);
+
+        sleep(400);
+
+        while (!found) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                cryptobox_column = vuMark.toString();
+                found = true;
+                telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
+
+                    // Extract the rotational components of the target relative to the robot
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                }
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+            telemetry.update();
+            if(runtime.seconds() > 5) {
+                break;
+            }
+        }
+
+        if (forward) {
+            RotateDistance(-0.4, -rev / 2);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(100);
-            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            gyroRotateLeft(0.8);
+            RotateDistance(0.4, rev / 2);
             sleep(100);
-            VerticalDriveDistance(-0.5, -2*rev);
+            VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 3*rev/2);
+            RotateDistance(-0.8, -3 * rev / 2);
             sleep(100);
-            robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            gyroRotateLeft(0.8);
+            VerticalDriveDistance(-0.5, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 3*rev/2 + 300);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 200);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.3, 2 * rev);
+            } else {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            }
             sleep(100);
+            RotateDistance(-0.5, -3 * rev / 2 + 100);
+            sleep(200);
+            VerticalDriveDistance(0.5, 3 * rev / 2);
+            sleep(200);
             startTop();
+            sleep(200);
+            VerticalDriveDistance(-0.3, -rev / 4);
+        } else if (!forward) {
+            VerticalDriveDistance(-0.4, -2 * rev);
+            sleep(100);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(300);
+            RotateDistance(-0.8, -3 * rev / 2);
+            sleep(100);
+            VerticalDriveDistance(-0.5, -2 * rev);
+            sleep(100);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.3, 2 * rev);
+            } else {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            }
+            sleep(100);
+            RotateDistance(-0.5, -3 * rev / 2 + 100);
+            sleep(200);
+            VerticalDriveDistance(0.5, 3 * rev / 2);
+            sleep(200);
+            startTop();
+            sleep(200);
+            VerticalDriveDistance(-0.3, -rev / 4);
         }
-        sleep(100);
+
+        //sleep(100);
 
         /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while (!found) {
@@ -208,13 +266,15 @@ public class AutoBlueTop extends LinearOpMode {
             telemetry.update();
         }*/
 
-
+        //}
     }
 
 
-    String format(OpenGLMatrix transformationMatrix) {
+    String format (OpenGLMatrix transformationMatrix){
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
+
+
 
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
@@ -253,6 +313,7 @@ public class AutoBlueTop extends LinearOpMode {
         rotateRight(-power);
     }
 
+
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
 
@@ -278,7 +339,6 @@ public class AutoBlueTop extends LinearOpMode {
         VerticalDrive(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
-            //wait until robot stops
         }
 
         //StopDriving();
@@ -310,7 +370,6 @@ public class AutoBlueTop extends LinearOpMode {
 //        StopDriving();
     }
 
-    //power is right, -power is left
     void RotateDistance(double power, int distance) throws InterruptedException {
         {
             //reset encoders
@@ -339,23 +398,10 @@ public class AutoBlueTop extends LinearOpMode {
         }
     }
 
-    void Winch(int distance) {
-        robot.lWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.lWinch.setTargetPosition(distance);
-        robot.rWinch.setTargetPosition(distance);
-
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.lWinch.setPower(1);
-        robot.rWinch.setPower(-1);
-
-        while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
-            //wait until robot stops
-        }
-
+    void Winch(double power) {
+        robot.lWinch.setPower(power);
+        robot.rWinch.setPower(power);
+        sleep(2000);
         robot.lWinch.setPower(0.05);
         robot.rWinch.setPower(0.05);
     }
@@ -468,8 +514,10 @@ public class AutoBlueTop extends LinearOpMode {
 
                         //heading is a string, so the below code makes it a long so it can actually be used
                         heading = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+                        temp = heading;
+                        heading = (temp+360)%360;
 
-                        return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+                        return formatAngle(robot.angles.angleUnit, heading);
 
                     }
                 });
@@ -500,16 +548,13 @@ public class AutoBlueTop extends LinearOpMode {
         }
 
         StopDriving();
-
-        // Should reset heading back to 0
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
-    void gyroRotateLeft(double power) {
+    void gyroRotateLeft(double power, double ngle) {
         //turn left
         rotateLeft(power+0.2);
 
-        while(heading<50){
+        while(heading<0.6*ngle){
             telemetry.update();
         }
         //gradually slow turn
@@ -520,37 +565,41 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(50);
         }
 
-        while (heading <95) {
+        while (heading <ngle+5) {
             telemetry.update();
         }
         StopDriving();
         //turn right(major adjust)
         rotateRight(power);
 
-        while(heading>92){
+        while(heading>ngle+2){
             telemetry.update();
         }
         //adjusting to range of 2 degrees
         //turn left, then adjust right
 
-        while(88>heading) {
+        while(ngle-2>heading) {
             //turn left
             robot.frontLeft.setPower(-power);
             rotateLeft(power);
-            while (heading < 95) {
+            while (heading < ngle+5) {
                 telemetry.update();
             }
             StopDriving();
             //turn right
             rotateRight(power);
 
-            while (heading > 92) {
+            while (heading > ngle+2) {
                 telemetry.update();
             }
         }
 
         StopDriving();
-        // Should reset heading back to 0
+    }
+
+    void setHeadingToZero() {
+        robot.gyroInit();
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
+
 }
