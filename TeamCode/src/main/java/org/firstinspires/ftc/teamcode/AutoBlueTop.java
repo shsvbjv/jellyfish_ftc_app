@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -41,13 +42,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
-@Autonomous(name = "AutoRedTop")
-public class AutoRedTop extends LinearOpMode {
+@Autonomous(name = "AutoBlueTop")
+public class AutoBlueTop extends LinearOpMode {
 
     //heading for gyro
     double heading;
     double temp;
 
+    ElapsedTime runtime = new ElapsedTime();
 
     VuforiaLocalizer vuforia;
 
@@ -122,6 +124,8 @@ public class AutoRedTop extends LinearOpMode {
 
         waitForStart();
 
+        runtime.reset();
+
         relicTrackables.activate();
 
 
@@ -137,11 +141,7 @@ public class AutoRedTop extends LinearOpMode {
 
         robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
-        if(isJewelRedFinal()) {
-            forward = false;
-        } else if(!isJewelRedFinal()) {
-            forward = true;
-        }
+        forward = isJewelRedFinal();
 
         grabTop();
 
@@ -157,16 +157,25 @@ public class AutoRedTop extends LinearOpMode {
                 cryptobox_column = vuMark.toString();
                 found = true;
                 telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
+
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
+                    // Extract the rotational components of the target relative to the robot
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
@@ -175,20 +184,32 @@ public class AutoRedTop extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
             }
             telemetry.update();
+            if(runtime.seconds() > 5) {
+                break;
+            }
         }
+
         if (forward) {
-            VerticalDriveDistance(0.4, 2*rev);
-            sleep(100);
+            RotateDistance(-0.4, -rev / 2);
             robot.armServo.setPosition(robot.UP_JARM_POS);
-            RotateDistance(-0.4, -3*rev / 2);
+            sleep(100);
+            RotateDistance(0.4, rev / 2);
             sleep(100);
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 2 * rev);
-            sleep(500);
-            VerticalDriveDistance(0.3, rev/6);
+            RotateDistance(-0.8, -3 * rev / 2);
             sleep(100);
-            RotateDistance(0.5, 3 * rev / 2 - 100);
+            VerticalDriveDistance(-0.5, -2 * rev);
+            sleep(100);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 200);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.3, 2 * rev);
+            } else {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            }
+            sleep(100);
+            RotateDistance(-0.5, -3 * rev / 2 + 100);
             sleep(200);
             VerticalDriveDistance(0.5, 3 * rev / 2);
             sleep(200);
@@ -196,23 +217,25 @@ public class AutoRedTop extends LinearOpMode {
             sleep(200);
             VerticalDriveDistance(-0.3, -rev / 4);
         } else if (!forward) {
-            RotateDistance(0.3, rev/2);
-            sleep(100);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(100);
-            RotateDistance(-0.3, -rev/2);
-            sleep(300);
-            VerticalDriveDistance(0.4, 2*rev);
-            sleep(300);
-            RotateDistance(-0.4, -3*rev / 2);
-            sleep(100);
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
-            VerticalDriveDistance(0.5, 2 * rev);
-            sleep(500);
-            VerticalDriveDistance(0.3, rev/6);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(300);
+            RotateDistance(-0.8, -3 * rev / 2);
             sleep(100);
-            RotateDistance(0.5, 3 * rev / 2 - 100);
+            VerticalDriveDistance(-0.5, -2 * rev);
+            sleep(100);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.5, 2 * rev);
+                sleep(100);
+                VerticalDriveDistance(0.3, rev / 4);
+            } else {
+                VerticalDriveDistance(0.3, 14 * rev / 5);
+            }
+            sleep(100);
+            RotateDistance(-0.5, -3 * rev / 2 + 100);
             sleep(200);
             VerticalDriveDistance(0.5, 3 * rev / 2);
             sleep(200);
