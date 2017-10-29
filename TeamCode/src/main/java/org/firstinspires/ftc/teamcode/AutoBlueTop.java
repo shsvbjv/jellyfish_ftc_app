@@ -228,9 +228,7 @@ public class AutoBlueTop extends LinearOpMode {
             if(cryptobox_column == "LEFT") {
                 VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
             } else if(cryptobox_column == "CENTER") {
-                VerticalDriveDistance(0.5, 2 * rev);
-                sleep(100);
-                VerticalDriveDistance(0.3, rev / 4);
+                VerticalDriveDistance(0.3, 2 * rev);
             } else {
                 VerticalDriveDistance(0.3, 14 * rev / 5);
             }
