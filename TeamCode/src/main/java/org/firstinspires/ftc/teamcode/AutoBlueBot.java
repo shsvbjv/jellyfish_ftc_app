@@ -41,8 +41,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
-@Autonomous(name = "Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "AutoBlueBot")
+public class AutoBlueBot extends LinearOpMode {
 
     //heading for gyro
     double heading;
@@ -137,11 +137,7 @@ public class Auto extends LinearOpMode {
 
         robot.armServo.setPosition(robot.DOWN_JARM_POS);
 
-        if(isJewelRedFinal()) {
-            forward = false;
-        } else if(!isJewelRedFinal()) {
-            forward = true;
-        }
+        forward = isJewelRedFinal();
 
         grabTop();
 
@@ -152,30 +148,35 @@ public class Auto extends LinearOpMode {
         sleep(400);
 
         if (forward) {
-            VerticalDriveDistance(0.4, 1*rev);
-            sleep(300);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(300);
-            VerticalDriveDistance(0.3, 3*rev/2);
-            sleep(300);
-            RotateDistance(0.3, 3*rev/2 - 100);
-            sleep(300);
-            VerticalDriveDistance(0.3, 2*rev);
-            startTop();
-            VerticalDriveDistance(0.3, -rev/2);
-        } else if (!forward) {
-            RotateDistance(0.3, rev/2);
-            sleep(100);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
             RotateDistance(-0.3, -rev/2);
             sleep(300);
-            VerticalDriveDistance(0.4, 3*rev);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(100);
+            RotateDistance(0.3, rev/2);
+            sleep(100);
+            VerticalDriveDistance(-0.3, -4*rev);
+            sleep(300);
+            VerticalDriveDistance(0.4, rev/4);
             sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
             VerticalDriveDistance(0.3, 2*rev);
             startTop();
-            VerticalDriveDistance(0.3, -rev/2);
+            VerticalDriveDistance(-0.3, -rev/2);
+        } else if (!forward) {
+            VerticalDriveDistance(-0.4, -1*rev);
+            sleep(300);
+            robot.armServo.setPosition(robot.UP_JARM_POS);
+            sleep(300);
+            VerticalDriveDistance(-0.3, -3*rev);
+            sleep(300);
+            VerticalDriveDistance(0.3, rev/4);
+            sleep(300);
+            RotateDistance(0.3, 3*rev/2 - 100);
+            sleep(300);
+            VerticalDriveDistance(0.3, 2*rev);
+            startTop();
+            VerticalDriveDistance(-0.3, -rev/2);
 
         }
 

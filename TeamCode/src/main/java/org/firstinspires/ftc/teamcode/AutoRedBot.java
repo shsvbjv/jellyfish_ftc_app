@@ -41,8 +41,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Ferannow and Kyle on 9/23/17. 123
  */
 
-@Autonomous(name = "Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "AutoRedBot")
+public class AutoRedBot extends LinearOpMode {
 
     //heading for gyro
     double heading;
@@ -156,26 +156,31 @@ public class Auto extends LinearOpMode {
             sleep(300);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(300);
-            VerticalDriveDistance(0.3, 3*rev/2);
+            VerticalDriveDistance(0.3, 3*rev);
+            sleep(300);
+            VerticalDriveDistance(-0.3, -rev/4);
             sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
             VerticalDriveDistance(0.3, 2*rev);
             startTop();
-            VerticalDriveDistance(0.3, -rev/2);
+            VerticalDriveDistance(-0.3, -rev/2);
         } else if (!forward) {
             RotateDistance(0.3, rev/2);
             sleep(100);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             RotateDistance(-0.3, -rev/2);
             sleep(300);
-            VerticalDriveDistance(0.4, 3*rev);
+            VerticalDriveDistance(0.4, 4*rev);
             sleep(300);
+            sleep(300);
+            VerticalDriveDistance(-0.3, -rev/4);
+            // I'm Gay
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
             VerticalDriveDistance(0.3, 2*rev);
             startTop();
-            VerticalDriveDistance(0.3, -rev/2);
+            VerticalDriveDistance(-0.3, -rev/2);
 
         }
 
