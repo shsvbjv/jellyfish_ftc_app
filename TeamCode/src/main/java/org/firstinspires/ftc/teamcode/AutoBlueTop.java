@@ -1,28 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.*;
-import java.util.Vector;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -32,11 +16,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Locale;
 
 /**
  * Created by Ferannow and Kyle on 9/23/17. 123
@@ -45,9 +30,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name = "AutoBlueTop")
 public class AutoBlueTop extends LinearOpMode {
 
+    //this object tests to see if pitch is 0
+    PitchChecker tester = new PitchChecker();
+
     //heading for gyro
     double heading;
     double temp;
+    double pitch;
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -215,7 +204,7 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 2);
+            VerticalDriveDistance(-0.3, -rev / 4);
         } else if (!forward) {
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
@@ -239,7 +228,7 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(200);
             startTop();
             sleep(200);
-            VerticalDriveDistance(-0.3, -rev / 2);
+            VerticalDriveDistance(-0.3, -rev / 4);
         }
 
         //sleep(100);
@@ -519,6 +508,20 @@ public class AutoBlueTop extends LinearOpMode {
 
                         return formatAngle(robot.angles.angleUnit, heading);
 
+                    }
+
+
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+
+                        pitch = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle));
+
+                        if(tester.checkFlat(pitch)){
+
+                        }
+
+                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
                     }
                 });
     }

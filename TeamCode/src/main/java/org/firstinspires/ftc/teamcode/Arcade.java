@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -65,6 +63,16 @@ public class Arcade extends LinearOpMode {
                 BL /= 3;
                 FR /= 3;
                 BR /= 3;
+            } else if(gamepad1.dpad_left) {
+                FL = -0.25;
+                BL = -0.25;
+                FR = 0.25;
+                BR = 0.25;
+            } else if(gamepad1.dpad_right) {
+                FL = 0.25;
+                BL = 0.25;
+                FR = -0.25;
+                BR = -0.25;
             }
 
             robot.frontLeft.setPower(FL);
@@ -124,27 +132,6 @@ public class Arcade extends LinearOpMode {
             robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
             robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
         }
-
-        /*if(winchbutton = true && gamepad2.right_stick_y == 0) {
-            lmotorpos = robot.lWinch.getCurrentPosition();
-            rmotorpos = robot.rWinch.getCurrentPosition();
-            robot.lWinch.setTargetPosition(lmotorpos);
-            robot.rWinch.setTargetPosition(rmotorpos);
-        }
-
-        if(gamepad2.right_stick_y != 0) {
-            winchbutton = true;
-        } else {
-            winchbutton = false;
-        }
-
-        if(lmotorpos - robot.lWinch.getCurrentPosition() < 0 && gamepad2.right_stick_y == 0) {
-            robot.lWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lWinch.setPower(-0.5);
-            robot.rWinch.setPower(-0.5);
-        }*/
-
     }
 
     void servo() {
