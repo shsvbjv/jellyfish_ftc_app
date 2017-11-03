@@ -34,11 +34,11 @@ public class hMap {
     //Gyro
 
     // The IMU sensor object
-    BNO055IMU imu;
+    public BNO055IMU imu;
 
     // State used for updating telemetry
-    Orientation angles;
-    Acceleration gravity;
+    public Orientation angles;
+    public Acceleration gravity;
 
 
     /* Motors */

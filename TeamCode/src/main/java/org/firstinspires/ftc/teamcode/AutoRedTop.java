@@ -45,9 +45,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name = "AutoRedTop")
 public class AutoRedTop extends LinearOpMode {
 
+    //this object tests to see if pitch is 0
+    PitchChecker tester = new PitchChecker();
+
     //heading for gyro
     double heading;
     double temp;
+    double pitch;
 
     ElapsedTime runtime = new ElapsedTime();
 
@@ -514,7 +518,24 @@ public class AutoRedTop extends LinearOpMode {
                         return formatAngle(robot.angles.angleUnit, heading);
 
                     }
+
+
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+
+                        pitch = Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle));
+
+                        if(tester.checkFlat(pitch)){
+
+                        }
+
+                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
                 });
+
+
+
     }
 
     //----------------------------------------------------------------------------------------------
