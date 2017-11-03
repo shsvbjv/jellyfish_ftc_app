@@ -127,83 +127,9 @@ public class Auto extends LinearOpMode {
 
 //------------------------------------------------------------------------------------------------------------------------------
         //start Autonomous
-            /*
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
-
-
-        robot.armServo.setPosition(robot.DOWN_JARM_POS);
-
-        if(isJewelRedFinal()) {
-            forward = false;
-        } else if(!isJewelRedFinal()) {
-            forward = true;
-        }
-
-        grabTop();
-
-        sleep(500);
 
         Winch(1);
 
-        sleep(400);
-
-        if (forward) {
-            VerticalDriveDistance(0.4, 1*rev);
-            sleep(300);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            sleep(300);
-            VerticalDriveDistance(0.3, 3*rev/2);
-            sleep(300);
-            RotateDistance(0.3, 3*rev/2 - 100);
-            sleep(300);
-            VerticalDriveDistance(0.3, 2*rev);
-            startTop();
-            VerticalDriveDistance(0.3, -rev/2);
-        } else if (!forward) {
-            RotateDistance(0.3, rev/2);
-            sleep(100);
-            robot.armServo.setPosition(robot.UP_JARM_POS);
-            RotateDistance(-0.3, -rev/2);
-            sleep(300);
-            VerticalDriveDistance(0.4, 3*rev);
-            sleep(300);
-            RotateDistance(0.3, 3*rev/2 - 100);
-            sleep(300);
-            VerticalDriveDistance(0.3, 2*rev);
-            startTop();
-            VerticalDriveDistance(0.3, -rev/2);
-
-        }
-
-        //sleep(100);
-
-        /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (!found) {
-            found = true;
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            cryptobox_column = vuMark.toString();
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-            telemetry.addData("Pose", format(pose));
-            if (pose != null) {
-                VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-            telemetry.update();
-        }*/
-
-        //}
     }
 
 
@@ -336,8 +262,9 @@ public class Auto extends LinearOpMode {
     }
 
     void Winch(double power) {
-        robot.lWinch.setPower(power);
-        robot.rWinch.setPower(power);
+
+        robot.lWinch.setPower(-power);
+        robot.rWinch.setPower(-power);
         sleep(2000);
         robot.lWinch.setPower(0.05);
         robot.rWinch.setPower(0.05);

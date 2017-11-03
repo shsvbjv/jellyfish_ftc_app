@@ -123,8 +123,8 @@ public class hMap {
 
         lWinch.setDirection(DcMotor.Direction.REVERSE);
 
-        lWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         lWinch.setPower(0);
         rWinch.setPower(0);

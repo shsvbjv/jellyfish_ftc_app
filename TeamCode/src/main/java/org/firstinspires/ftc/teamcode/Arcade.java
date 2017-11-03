@@ -20,6 +20,7 @@ public class Arcade extends LinearOpMode {
     boolean botHalf = false;
     int lmotorpos;
     int rmotorpos;
+    double winchpow;
 
     hMap robot = new hMap();
 
@@ -121,19 +122,16 @@ public class Arcade extends LinearOpMode {
 
     void Winch() {
 
-        robot.lWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        winchpow = scaleInput(gamepad2.right_stick_y);
 
         if (gamepad2.left_bumper) {
-            robot.lWinch.setPower(-0.05);
-            robot.rWinch.setPower(-0.05);
+            winchpow = -0.05;
         } else if (gamepad2.right_bumper) {
-            robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y) / 2);
-            robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y) / 2);
-        } else {
-            robot.lWinch.setPower(scaleInput(gamepad2.right_stick_y));
-            robot.rWinch.setPower(scaleInput(gamepad2.right_stick_y));
+            winchpow /= 2;
         }
+
+        robot.lWinch.setPower(winchpow);
+        robot.rWinch.setPower(winchpow);
     }
 
     void servo() {
