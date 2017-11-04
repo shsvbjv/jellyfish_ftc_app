@@ -149,12 +149,6 @@ public class AutoBlueTop extends LinearOpMode {
 
         grabTop();
 
-        sleep(500);
-
-        Winch(1);
-
-        sleep(400);
-
         while (!found) {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
@@ -209,6 +203,8 @@ public class AutoBlueTop extends LinearOpMode {
                 VerticalDriveDistance(0.3, 7 * rev / 5 + 200);
             } else if(cryptobox_column == "CENTER") {
                 VerticalDriveDistance(0.3, 2 * rev);
+                sleep(100);
+                VerticalDriveDistance(0.3, rev/4);
             } else {
                 VerticalDriveDistance(0.3, 14 * rev / 5);
             }
@@ -233,6 +229,8 @@ public class AutoBlueTop extends LinearOpMode {
                 VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
             } else if(cryptobox_column == "CENTER") {
                 VerticalDriveDistance(0.3, 2 * rev);
+                sleep(100);
+                VerticalDriveDistance(0.3, rev/4);
             } else {
                 VerticalDriveDistance(0.3, 14 * rev / 5);
             }
@@ -245,32 +243,6 @@ public class AutoBlueTop extends LinearOpMode {
             sleep(200);
             VerticalDriveDistance(-0.3, -rev / 4);
         }
-
-        //sleep(100);
-
-        /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (!found) {
-            found = true;
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            cryptobox_column = vuMark.toString();
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-            telemetry.addData("Pose", format(pose));
-            if (pose != null) {
-                VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-            telemetry.update();
-        }*/
-
-        //}
     }
 
 
@@ -315,6 +287,11 @@ public class AutoBlueTop extends LinearOpMode {
 
     void rotateLeft(double power) {
         rotateRight(-power);
+    }
+
+    void Winch(double power) {
+        robot.lWinch.setPower(-power);
+        robot.rWinch.setPower(-power);
     }
 
 
@@ -365,13 +342,13 @@ public class AutoBlueTop extends LinearOpMode {
         robot.backLeft.setTargetPosition(-distance);
         robot.backRight.setTargetPosition(distance);
 
-        // HorizontalStrafing(power);
+        HorizontalStrafing(power);
 
         while (robot.frontLeft.isBusy() && robot.frontRight.isBusy() && robot.backLeft.isBusy() && robot.backRight.isBusy()) {
             //wait until robot stops
         }
 
-//        StopDriving();
+        //StopDriving();
     }
 
     void RotateDistance(double power, int distance) throws InterruptedException {
@@ -398,16 +375,23 @@ public class AutoBlueTop extends LinearOpMode {
                 //wait until robot stops
             }
 
-            //          StopDriving();
+            //StopDriving();
         }
     }
 
-    void Winch(double power) {
-        robot.lWinch.setPower(power);
-        robot.rWinch.setPower(power);
-        sleep(2000);
-        robot.lWinch.setPower(0.05);
-        robot.rWinch.setPower(0.05);
+    void WinchDistance(double power, int distance) {
+        robot.lWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.lWinch.setTargetPosition(-distance);
+        robot.rWinch.setTargetPosition(-distance);
+
+        Winch(power);
+
+        while (robot.lWinch.isBusy() && robot.rWinch.isBusy()) {
+            //wait until robot stops
+        }
+        //StopDriving();
     }
 
 //------------------------------------------------------------------------------------------------------------------------------

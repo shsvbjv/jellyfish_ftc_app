@@ -141,12 +141,6 @@ public class AutoBlueBot extends LinearOpMode {
 
         grabTop();
 
-        sleep(500);
-
-        Winch(1);
-
-        sleep(400);
-
         if (forward) {
             RotateDistance(-0.3, -rev/2);
             sleep(300);
@@ -179,32 +173,6 @@ public class AutoBlueBot extends LinearOpMode {
             VerticalDriveDistance(-0.3, -rev/2);
 
         }
-
-        //sleep(100);
-
-        /*RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (!found) {
-            found = true;
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            cryptobox_column = vuMark.toString();
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-            telemetry.addData("Pose", format(pose));
-            if (pose != null) {
-                VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-            telemetry.update();
-        }*/
-
-        //}
     }
 
 
@@ -249,6 +217,11 @@ public class AutoBlueBot extends LinearOpMode {
 
     void rotateLeft(double power) {
         rotateRight(-power);
+    }
+
+    void Winch(double power) {
+        robot.lWinch.setPower(-power);
+        robot.rWinch.setPower(-power);
     }
 
 
@@ -336,12 +309,19 @@ public class AutoBlueBot extends LinearOpMode {
         }
     }
 
-    void Winch(double power) {
-        robot.lWinch.setPower(power);
-        robot.rWinch.setPower(power);
-        sleep(2000);
-        robot.lWinch.setPower(0.05);
-        robot.rWinch.setPower(0.05);
+    void WinchDistance(double power, int distance) {
+        robot.lWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.lWinch.setTargetPosition(-distance);
+        robot.rWinch.setTargetPosition(-distance);
+
+        Winch(power);
+
+        while (robot.lWinch.isBusy() && robot.rWinch.isBusy()) {
+            //wait until robot stops
+        }
+        //StopDriving();
     }
 
 //------------------------------------------------------------------------------------------------------------------------------
