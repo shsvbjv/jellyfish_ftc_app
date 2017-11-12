@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -47,7 +48,7 @@ public class AutoRedBot extends LinearOpMode {
     //heading for gyro
     double heading;
     double temp;
-
+    ElapsedTime runtime = new ElapsedTime();
 
     VuforiaLocalizer vuforia;
 
@@ -122,6 +123,8 @@ public class AutoRedBot extends LinearOpMode {
 
         waitForStart();
 
+        runtime.reset();
+
         relicTrackables.activate();
 
 
@@ -145,14 +148,51 @@ public class AutoRedBot extends LinearOpMode {
 
         grabTop();
 
+        while (!found) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                cryptobox_column = vuMark.toString();
+                found = true;
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
+
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                }
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+            telemetry.update();
+            if(runtime.seconds() > 5) {
+                break;
+            }
+        }
+
         if (forward) {
             VerticalDriveDistance(0.4, 1*rev);
             sleep(300);
             robot.armServo.setPosition(robot.UP_JARM_POS);
             sleep(300);
-            VerticalDriveDistance(0.3, 3*rev);
-            sleep(300);
-            VerticalDriveDistance(-0.3, -rev/4);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.3, 5*rev/2 + 200);
+                 sleep(300);
+                 VerticalDriveDistance(-0.3, -rev/4);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.4, 3*rev/2);
+            } else {
+                VerticalDriveDistance(0.3, rev / 2);
+                sleep(300);
+                VerticalDriveDistance(-0.3, -rev);
+            }
             sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
@@ -165,17 +205,29 @@ public class AutoRedBot extends LinearOpMode {
             robot.armServo.setPosition(robot.UP_JARM_POS);
             RotateDistance(-0.3, -rev/2);
             sleep(300);
-            VerticalDriveDistance(0.4, 4*rev);
-            sleep(300);
-            VerticalDriveDistance(-0.3, -rev/4);
+            if(cryptobox_column == "LEFT") {
+                VerticalDriveDistance(0.4, 7*rev/2 + 200);
+                sleep(300);
+                VerticalDriveDistance(-0.3, -rev/4);
+            } else if(cryptobox_column == "CENTER") {
+                VerticalDriveDistance(0.4, 5 * rev / 2);
+            } else {
+                VerticalDriveDistance(0.4, 3 * rev / 2);
+                sleep(300);
+                VerticalDriveDistance(-0.3, -rev/4);
+            }
             // I'm Gay
+            sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
             VerticalDriveDistance(0.3, 2*rev);
             startTop();
-            VerticalDriveDistance(-0.3, -rev/2);
-
+            VerticalDriveDistance(-0.3, -rev/4);
         }
+        sleep(300);
+        VerticalDriveDistance(0.3, rev/2);
+        sleep(300);
+        VerticalDriveDistance(-0.3, -rev/3);
     }
 
 

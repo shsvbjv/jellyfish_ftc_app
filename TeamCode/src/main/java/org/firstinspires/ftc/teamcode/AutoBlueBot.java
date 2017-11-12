@@ -150,7 +150,7 @@ public class AutoBlueBot extends LinearOpMode {
             sleep(100);
             VerticalDriveDistance(-0.3, -4*rev);
             sleep(300);
-            VerticalDriveDistance(0.4, rev/4);
+            VerticalDriveDistance(0.4, rev);
             sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
@@ -164,15 +164,18 @@ public class AutoBlueBot extends LinearOpMode {
             sleep(300);
             VerticalDriveDistance(-0.3, -3*rev);
             sleep(300);
-            VerticalDriveDistance(0.3, rev/4);
+            VerticalDriveDistance(0.3, rev);
             sleep(300);
             RotateDistance(0.3, 3*rev/2 - 100);
             sleep(300);
             VerticalDriveDistance(0.3, 2*rev);
             startTop();
             VerticalDriveDistance(-0.3, -rev/2);
-
         }
+        sleep(300);
+        VerticalDriveDistance(0.3, rev/2);
+        sleep(300);
+        VerticalDriveDistance(-0.3, -rev/3);
     }
 
 

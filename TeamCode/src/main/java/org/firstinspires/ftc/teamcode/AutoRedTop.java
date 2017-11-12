@@ -220,15 +220,15 @@ public class AutoRedTop extends LinearOpMode {
             VerticalDriveDistance(-0.4, -2 * rev);
             sleep(100);
             if(cryptobox_column == "LEFT") {
-                VerticalDriveDistance(0.3, 14 * rev / 5);
+                VerticalDriveDistance(0.3, 14 * rev / 5 - 100);
             } else if(cryptobox_column == "CENTER") {
                 VerticalDriveDistance(0.3, 2 * rev);
                 sleep(100);
                 VerticalDriveDistance(0.3, rev/6);
             } else {
-                VerticalDriveDistance(0.3, 7 * rev / 5 + 100);
+                VerticalDriveDistance(0.3, 7 * rev / 5 + 200);
             };
-            sleep(100);
+            sleep(300);
             RotateDistance(0.5, 3 * rev / 2 - 100);
             sleep(200);
             VerticalDriveDistance(0.5, 3 * rev / 2);
@@ -240,7 +240,7 @@ public class AutoRedTop extends LinearOpMode {
         sleep(100);
         VerticalDriveDistance(0.3, rev/2);
         sleep(100);
-        VerticalDriveDistance(-0.3, rev/4);
+        VerticalDriveDistance(-0.3, -rev/3);
     }
 
 

@@ -77,7 +77,7 @@ public class Arcade extends LinearOpMode {
                 FR = -0.25;
                 BR = -0.25;
             }
-
+//lamo oliver is lucifer
             robot.frontLeft.setPower(FL);
             robot.backLeft.setPower(BL);
             robot.frontRight.setPower(FR);
